@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ProCap — Your prompts, in this browser</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg1:#f7f3ff; --bg2:#fff6f9;
+  --ink:#38324a; --muted:#6f6880; --faint:#9a93ad;
+  --card:#ffffff; --line:#ece7f7;
+  --lav:#b79ced; --blush:#f5a8c4; --butter:#f7dc8b; --mint:#a9e7cd; --sky:#a9d9ec;
+  --shadow:0 10px 30px rgba(120,100,180,.10);
+  --radius:22px;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  font-family:'Outfit',system-ui,sans-serif; color:var(--ink);
+  background:linear-gradient(160deg,var(--bg1),var(--bg2));
+  min-height:100vh; -webkit-font-smoothing:antialiased;
+}
+h1,h2,h3,.serif{font-family:'Fraunces',Georgia,serif}
+.wrap{max-width:1080px;margin:0 auto;padding:32px 22px 90px}
+/* ---------- header ---------- */
+.brand{display:flex;align-items:center;gap:10px;margin-bottom:34px}
+.brand .dash{width:34px;height:10px;border-radius:99px;background:linear-gradient(90deg,var(--blush),var(--butter))}
+.brand .word{font-family:'Fraunces',serif;font-weight:700;font-size:30px;letter-spacing:.5px}
+.brand .word em{font-style:normal;color:#7a5fd0}
+.hero{display:grid;grid-template-columns:1.15fr .85fr;gap:36px;align-items:start;margin-bottom:56px}
+.hero h1{font-size:clamp(40px,6vw,68px);line-height:1.06;margin:0;font-weight:600;letter-spacing:-.5px}
+.hero p.sub{color:var(--muted);font-size:17px;line-height:1.55;max-width:44ch;margin:18px 0 0}
+.hero-side{display:flex;flex-direction:column;align-items:center;gap:14px;padding-top:8px}
+.mascot{position:relative;width:150px;height:150px;animation:floaty 4.5s ease-in-out infinite}
+.mascot svg{width:100%;height:100%;display:block}
+.mascot .eyes{transform-origin:60px 58px;animation:blink 5s infinite}
+@keyframes blink{0%,93%,100%{transform:scaleY(1)}96%{transform:scaleY(.08)}}
+@keyframes floaty{0%,100%{transform:translateY(0) rotate(-2deg)}50%{transform:translateY(-12px) rotate(2deg)}}
+.orbit{position:absolute;border-radius:50%;opacity:.9}
+.o1{width:12px;height:12px;background:var(--butter);top:6px;right:18px;animation:floaty 3.4s ease-in-out infinite}
+.o2{width:9px;height:9px;background:var(--blush);bottom:16px;left:6px;animation:floaty 3.9s ease-in-out infinite reverse}
+.o3{width:7px;height:7px;background:var(--mint);top:44px;left:-6px;animation:floaty 4.2s ease-in-out infinite}
+.mascot-cap{font-family:'Fraunces',serif;font-size:17px;color:var(--muted);text-align:center}
+/* ---------- cards ---------- */
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow)}
+.capture{padding:26px;margin-bottom:64px;position:relative}
+.capture h2{margin:0 0 4px;font-size:24px;font-weight:600}
+.capture .hint{color:var(--faint);font-size:14px;margin:0 0 18px}
+.grid2{display:grid;grid-template-columns:1fr 220px;gap:14px;margin-bottom:14px}
+label.f{display:block;font-size:13px;font-weight:600;color:var(--muted);margin-bottom:6px}
+input[type=text],textarea,select{
+  width:100%;border:1.5px solid var(--line);border-radius:14px;padding:12px 14px;
+  font-family:'Outfit',sans-serif;font-size:15px;color:var(--ink);background:#fbfaff;outline:none;
+}
+input:focus,textarea:focus,select:focus{border-color:var(--lav);background:#fff}
+textarea{resize:vertical;min-height:130px;line-height:1.55}
+.capture textarea{min-height:150px}
+.row{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-top:16px;flex-wrap:wrap}
+.toggle-wrap{display:flex;align-items:center;gap:12px}
+.switch{position:relative;width:48px;height:28px;flex:none;cursor:pointer}
+.switch input{opacity:0;width:0;height:0}
+.slider{position:absolute;inset:0;background:#e3def2;border-radius:99px;transition:.25s}
+.slider:before{content:"";position:absolute;width:22px;height:22px;left:3px;top:3px;background:#fff;border-radius:50%;transition:.25s;box-shadow:0 2px 6px rgba(0,0,0,.18)}
+.switch input:checked + .slider{background:linear-gradient(90deg,var(--lav),var(--blush))}
+.switch input:checked + .slider:before{transform:translateX(20px)}
+.toggle-text b{display:block;font-size:15px}
+.toggle-text span{font-size:13px;color:var(--faint)}
+.btn{border:none;border-radius:14px;padding:12px 22px;font-family:'Outfit',sans-serif;font-weight:600;font-size:15px;cursor:pointer;transition:transform .12s, box-shadow .12s}
+.btn:active{transform:scale(.97)}
+.btn-primary{background:linear-gradient(120deg,#a58bf0,#e79ec0);color:#fff;box-shadow:0 8px 20px rgba(165,139,240,.35)}
+.btn-primary:hover{box-shadow:0 10px 26px rgba(165,139,240,.5)}
+.btn-ghost{background:#f3effc;color:var(--ink)}
+.btn-danger{background:#fdeef2;color:#c2436b}
+.btn:disabled{opacity:.55;cursor:not-allowed}
+/* ---------- library ---------- */
+.lib-head{margin-bottom:8px}
+.eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:13px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#7a5fd0;margin-bottom:10px}
+.eyebrow .dash{width:26px;height:8px;border-radius:99px;background:linear-gradient(90deg,var(--blush),var(--butter))}
+.lib-head h2{font-size:clamp(30px,4.5vw,46px);margin:0 0 20px;font-weight:600;letter-spacing:-.5px;line-height:1.12}
+.toolbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:18px}
+.search{flex:1;min-width:200px;position:relative}
+.search input{padding-left:40px}
+.search .icon{position:absolute;left:13px;top:50%;transform:translateY(-50%);color:var(--faint);font-size:17px}
+select.sort{width:auto}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:22px}
+.chip{border:1.5px solid var(--line);background:#fff;border-radius:99px;padding:7px 14px;font-size:13.5px;font-weight:600;color:var(--muted);cursor:pointer;display:inline-flex;align-items:center;gap:7px}
+.chip .dot{width:10px;height:10px;border-radius:50%}
+.chip.active{background:var(--ink);color:#fff;border-color:var(--ink)}
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,290px),1fr));gap:16px}
+.pcard{padding:18px;display:flex;flex-direction:column;gap:10px;transition:transform .15s}
+.pcard:hover{transform:translateY(-3px)}
+.pcard .top{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.subj{font-size:12px;font-weight:700;padding:5px 11px;border-radius:99px;color:#4a4260;background:#f3effc}
+.fav{background:none;border:none;font-size:18px;cursor:pointer;color:var(--faint);padding:2px 6px}
+.fav.on{color:#e8a13c}
+.pcard h3{margin:0;font-size:19px;font-weight:600;line-height:1.3;overflow-wrap:anywhere}
+.pcard .prev{color:var(--muted);font-size:14px;line-height:1.55;margin:0;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;white-space:pre-wrap}
+.pcard .actions{display:flex;gap:6px;flex-wrap:wrap;margin-top:auto;padding-top:6px}
+.mini{border:1px solid var(--line);background:#fbfaff;border-radius:10px;padding:7px 11px;font-size:13px;font-weight:600;color:var(--ink);cursor:pointer;font-family:'Outfit',sans-serif}
+.mini:hover{background:#f3effc}
+.empty{padding:56px 24px;text-align:center;color:var(--muted)}
+.empty .big{font-family:'Fraunces',serif;font-size:22px;color:var(--ink);margin:14px 0 6px}
+/* ---------- private section ---------- */
+.vault{margin-top:64px;padding:26px}
+.vault h2{margin:0 0 4px;font-size:24px;font-weight:600}
+.vault .hint{color:var(--faint);font-size:14px;margin:0 0 16px}
+.lockbox{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+/* ---------- footer / status ---------- */
+.statusbar{position:fixed;left:0;right:0;bottom:0;display:flex;justify-content:center;padding:10px;pointer-events:none}
+.status-pill{pointer-events:auto;background:rgba(56,50,74,.92);color:#fff;font-size:13px;font-weight:600;border-radius:99px;padding:8px 18px;display:flex;gap:8px;align-items:center;box-shadow:0 8px 24px rgba(0,0,0,.18)}
+.status-pill .dot{width:9px;height:9px;border-radius:50%;background:#8f8}
+/* ---------- modal ---------- */
+.overlay{position:fixed;inset:0;background:rgba(56,50,74,.45);display:none;align-items:center;justify-content:center;padding:18px;z-index:100}
+.overlay.open{display:flex}
+.modal{background:#fff;border-radius:24px;max-width:640px;width:100%;max-height:88vh;overflow:auto;padding:26px;box-shadow:0 24px 70px rgba(60,40,120,.25)}
+.modal h2{margin:0 0 14px;font-size:23px}
+.modal .full{white-space:pre-wrap;line-height:1.65;color:var(--ink);font-size:15px}
+.modal .mrow{display:flex;gap:10px;justify-content:flex-end;margin-top:20px;flex-wrap:wrap}
+.field{margin-bottom:14px}
+/* ---------- toast ---------- */
+.toast{position:fixed;bottom:70px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--ink);color:#fff;padding:12px 24px;border-radius:99px;font-weight:600;font-size:14px;opacity:0;transition:.25s;z-index:200;pointer-events:none}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+@media(max-width:340px){.capture,.vault{padding:16px}.toast{width:calc(100% - 20px);border-radius:20px;text-align:center}.status-pill{max-width:calc(100vw - 16px)}}
+.hidden{display:none!important}
+@media(max-width:760px){
+  .hero{grid-template-columns:1fr}
+  .grid2{grid-template-columns:1fr}
+  .wrap{padding:22px 16px 90px}
+}
+</style>
+</head>
+<body>
+<div class="wrap" id="app">
+  <div class="brand"><span class="dash"></span><span class="word">Pro<em>Cap</em></span></div>
+
+  <section class="hero">
+    <div>
+      <h1>Catch a brilliant prompt before it floats away.</h1>
+      <p class="sub">Give it a name and a subject. Your next writing session will know exactly where to find it.</p>
+      <p class="sub" style="font-size:14px">Everything you save stays in this browser only. Nothing is uploaded anywhere, no account, no sign in.</p>
+    </div>
+    <div class="hero-side">
+      <div class="mascot" aria-hidden="true">
+        <svg viewBox="0 0 120 120">
+          <ellipse cx="60" cy="62" rx="44" ry="40" fill="#eef4ff" stroke="#d9e6ff" stroke-width="2"/>
+          <ellipse cx="38" cy="72" rx="8" ry="6" fill="#f5a8c4" opacity=".65"/>
+          <ellipse cx="82" cy="72" rx="8" ry="6" fill="#f5a8c4" opacity=".65"/>
+          <g class="eyes">
+            <circle cx="48" cy="58" r="4.5" fill="#38324a"/>
+            <circle cx="72" cy="58" r="4.5" fill="#38324a"/>
+          </g>
+          <path d="M52 74 Q60 80 68 74" stroke="#38324a" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+        </svg>
+        <span class="orbit o1"></span><span class="orbit o2"></span><span class="orbit o3"></span>
+      </div>
+      <div class="mascot-cap">Ready when inspiration lands.</div>
+    </div>
+  </section>
+
+  <section class="card capture" id="captureCard">
+    <h2>Save a new prompt</h2>
+    <p class="hint">Type a name, pick a subject, paste your prompt, and save. It stays in this browser.</p>
+    <div class="grid2">
+      <div><label class="f" for="fTitle">Prompt name</label><input type="text" id="fTitle" placeholder="e.g. Tighten my literature review" maxlength="120"></div>
+      <div><label class="f" for="fSubject">Subject</label><select id="fSubject"></select></div>
+    </div>
+    <div><label class="f" for="fBody">Your prompt</label><textarea id="fBody" placeholder="Paste or write the prompt you want to keep..."></textarea></div>
+    <div class="row">
+      <div class="toggle-wrap">
+        <label class="switch"><input type="checkbox" id="fPrivate"><span class="slider"></span></label>
+        <div class="toggle-text"><b>Keep private</b><span>Hide it from the main library until you reveal it</span></div>
+      </div>
+      <button class="btn btn-primary" id="saveBtn">✦ Save prompt</button>
+    </div>
+  </section>
+
+  <section>
+    <div class="lib-head">
+      <span class="eyebrow"><span class="dash"></span>Your library</span>
+      <h2>Every great answer starts with a great prompt.</h2>
+    </div>
+    <div class="toolbar">
+      <div class="search"><span class="icon">⌕</span><input type="text" id="search" placeholder="Search prompts... (Ctrl+K)"></div>
+      <select class="sort" id="sortSel">
+        <option value="new">Newest first</option>
+        <option value="old">Oldest first</option>
+        <option value="az">A to Z</option>
+      </select>
+      <button class="mini" id="exportBtn">Export JSON</button>
+      <button class="mini" id="importBtn">Import JSON</button>
+      <input type="file" id="importFile" accept="application/json" class="hidden">
+    </div>
+    <div class="chips" id="chips"></div>
+    <div class="cards" id="cards"></div>
+    <div class="card empty hidden" id="emptyLib">
+      <div class="mascot" style="width:90px;height:90px;margin:0 auto" aria-hidden="true">
+        <svg viewBox="0 0 120 120">
+          <ellipse cx="60" cy="62" rx="44" ry="40" fill="#eef4ff" stroke="#d9e6ff" stroke-width="2"/>
+          <g class="eyes"><circle cx="48" cy="58" r="4.5" fill="#38324a"/><circle cx="72" cy="58" r="4.5" fill="#38324a"/></g>
+          <path d="M52 74 Q60 80 68 74" stroke="#38324a" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <div class="big serif">Your first favorite prompt starts above</div>
+      <div>Save one and it will live here, ready to copy.</div>
+    </div>
+  </section>
+
+  <section class="card vault" id="vaultSection">
+    <h2>🔒 Private prompts</h2>
+    <p class="hint">Private prompts stay only in this browser and stay hidden until you reveal them. They are never uploaded anywhere.</p>
+    <div class="lockbox" style="margin-bottom:16px">
+      <button class="btn btn-ghost" id="privateToggle">Show private prompts</button>
+    </div>
+    <div id="vaultCards" class="hidden"></div>
+  </section>
+
+  <p style="color:var(--faint);font-size:13px;margin-top:32px">Safety tip: click Export JSON once in a while and keep that file safe. If this browser's data is ever cleared, Import JSON brings everything back.</p>
+</div>
+
+<div class="statusbar"><div class="status-pill" id="statusPill"><span class="dot"></span><span id="statusText">Saved in this browser</span></div></div>
+
+<!-- view/edit modal -->
+<div class="overlay" id="promptOverlay">
+  <div class="modal">
+    <h2 class="serif" id="mTitle"></h2>
+    <div class="full" id="mBody"></div>
+    <div id="mEdit" class="hidden">
+      <div class="field"><label class="f">Prompt name</label><input type="text" id="mEditTitle" maxlength="120"></div>
+      <div class="field"><label class="f">Subject</label><select id="mEditSubject"></select></div>
+      <div class="field"><label class="f">Your prompt</label><textarea id="mEditBody"></textarea></div>
+    </div>
+    <div class="mrow">
+      <button class="btn btn-ghost" id="mClose">Close</button>
+      <button class="btn btn-ghost hidden" id="mSaveEdit">Save changes</button>
+      <button class="btn btn-ghost" id="mEditBtn">Edit</button>
+      <button class="btn btn-primary" id="mCopy">Copy prompt</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+<script>
+"use strict";
+/* ============ ProCap Local: everything is stored in this browser only.
+   No GitHub, no token, no network calls (except the font files).
+   Storage key: "procap_local" in localStorage. ============ */
+const DEFAULT_SUBJECTS = [
+  {id:"s-research", name:"Research", color:"#b79ced"},
+  {id:"s-writing", name:"Writing", color:"#f5a8c4"},
+  {id:"s-coding", name:"Coding", color:"#a9d9ec"},
+  {id:"s-teaching", name:"Teaching", color:"#f7dc8b"},
+  {id:"s-analysis", name:"Analysis", color:"#a9e7cd"},
+  {id:"s-brain", name:"Brainstorming", color:"#d9b8f0"},
+  {id:"s-general", name:"General", color:"#cfc9e8"}
+];
+const STORE_KEY = "procap_local";
+const S = {
+  data: {subjects: JSON.parse(JSON.stringify(DEFAULT_SUBJECTS)), prompts: []},
+  filter: "all", sort: "new", search: "",
+  editingId: null, viewingId: null, privateShown: false, storageError: false
+};
+const $ = id => document.getElementById(id);
+const uid = () => "p" + Date.now().toString(36) + Math.random().toString(36).slice(2,8);
+const esc = s => String(s==null?"":s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+function toast(msg){ const t=$("toast"); t.textContent=msg; t.classList.add("show"); clearTimeout(t._h); t._h=setTimeout(()=>t.classList.remove("show"),2200); }
+function setStatus(text){ $("statusText").textContent=text; }
+
+/* ============ local storage and validated local-only data ============ */
+const safeColor = value => typeof value === "string" && /^#[0-9a-fA-F]{6}$/.test(value) ? value : "#cfc9e8";
+const hasOwn = (object, key) => Object.prototype.hasOwnProperty.call(object, key);
+function cleanSubject(s){
+  if(!s || typeof s !== "object" || typeof s.id !== "string" || !s.id || s.id.length>256 ||
+     typeof s.name !== "string" || !s.name.trim() || s.name.length>120) throw Error("Invalid subject");
+  return {id:s.id,name:s.name.trim(),color:safeColor(s.color)};
+}
+function cleanPrompt(p){
+  if(!p || typeof p !== "object" || typeof p.id !== "string" || !p.id || p.id.length>256 ||
+     typeof p.title !== "string" || !p.title.trim() || typeof p.body !== "string") throw Error("Invalid prompt");
+  const now=new Date().toISOString();
+  return {id:p.id,title:p.title,subjectId:typeof p.subjectId === "string" ? p.subjectId : "s-general",
+    body:p.body,isPrivate:p.isPrivate===true,favorite:p.favorite===true,
+    createdAt:typeof p.createdAt === "string" && !isNaN(Date.parse(p.createdAt)) ? p.createdAt : now,
+    updatedAt:typeof p.updatedAt === "string" && !isNaN(Date.parse(p.updatedAt)) ? p.updatedAt : now};
+}
+function loadLocal(){
+  try{
+    const raw = localStorage.getItem(STORE_KEY);
+    if(!raw) return;
+    const j=JSON.parse(raw);
+    if(!j || !Array.isArray(j.subjects) || !Array.isArray(j.prompts)) throw Error("Invalid stored data");
+    const subjects=j.subjects.map(cleanSubject), prompts=j.prompts.map(cleanPrompt);
+    if(!subjects.some(x=>x.id==="s-general")) subjects.push({...DEFAULT_SUBJECTS[6]});
+    S.data={subjects,prompts};
+  }catch(e){
+    // Never quietly overwrite an unreadable library. Importing a backup can recover it.
+    S.storageError=true;
+    setStatus("Stored data unreadable — import a backup");
+    toast("Could not read saved data; import a backup to recover");
+  }
+}
+function commitData(next, recovery=false){
+  if(S.storageError && !recovery){
+    toast("Storage unreadable: import a backup before saving");
+    return false;
+  }
+  try{
+    localStorage.setItem(STORE_KEY,JSON.stringify(next));
+    S.data=next; S.storageError=false;
+    setStatus("Saved in this browser");
+    renderAll();
+    return true;
+  }catch(e){
+    setStatus("Not saved — browser storage unavailable");
+    toast("Could not save: browser storage is full or blocked");
+    return false;
+  }
+}
+function changeData(edit){
+  const next=JSON.parse(JSON.stringify(S.data));
+  edit(next);
+  return commitData(next);
+}
+
+/* ============ rendering ============ */
+function subjOf(p){ return S.data.subjects.find(s=>s.id===p.subjectId) || S.data.subjects.find(s=>s.id==="s-general") || {name:"General",color:"#cfc9e8"}; }
+function fillSubjectSelect(sel, val){
+  sel.innerHTML = S.data.subjects.map(s=>'<option value="'+esc(s.id)+'"'+(s.id===val?' selected':'')+'>'+esc(s.name)+'</option>').join("");
+}
+function filteredPrompts(onlyPrivate){
+  let list = S.data.prompts.filter(p => onlyPrivate ? p.isPrivate : !p.isPrivate);
+  if(S.filter==="fav") list = list.filter(p=>p.favorite);
+  else if(S.filter!=="all") list = list.filter(p=>p.subjectId===S.filter);
+  const q = S.search.trim().toLowerCase();
+  if(q) list = list.filter(p => (p.title+" "+(p.body||"")).toLowerCase().includes(q));
+  list = list.slice();
+  if(S.sort==="az") list.sort((a,b)=>a.title.localeCompare(b.title));
+  else if(S.sort==="old") list.sort((a,b)=>new Date(a.createdAt)-new Date(b.createdAt));
+  else list.sort((a,b)=>new Date(b.createdAt)-new Date(a.createdAt));
+  return list;
+}
+function cardHTML(p, withDataId){
+  const s = subjOf(p);
+  const idAttr = withDataId ? ' data-id="'+esc(p.id)+'"' : '';
+  return '<div class="card pcard" data-id="'+esc(p.id)+'">'+
+    '<div class="top"><span class="subj" style="background:'+safeColor(s.color)+'33">'+esc(s.name)+'</span>'+
+    '<button class="fav'+(p.favorite?' on':'')+'" data-act="fav"'+idAttr+' title="Favorite">★</button></div>'+
+    '<h3>'+esc(p.title)+'</h3>'+
+    '<p class="prev">'+(p.isPrivate && !S.privateShown ? '🔒 Private prompt' : esc((p.body||"").slice(0,220)))+'</p>'+
+    '<div class="actions">'+
+      '<button class="mini" data-act="copy"'+idAttr+'>Copy</button>'+
+      '<button class="mini" data-act="view"'+idAttr+'>View</button>'+
+      '<button class="mini" data-act="dup"'+idAttr+'>Duplicate</button>'+
+      '<button class="mini" data-act="del"'+idAttr+'>Delete</button>'+
+    '</div></div>';
+}
+function renderChips(){
+  let h='<button class="chip'+(S.filter==="all"?' active':'')+'" data-f="all">All</button>'+
+        '<button class="chip'+(S.filter==="fav"?' active':'')+'" data-f="fav">★ Favorites</button>';
+  S.data.subjects.forEach(s=>{
+    h+='<button class="chip'+(S.filter===s.id?' active':'')+'" data-f="'+esc(s.id)+'"><span class="dot" style="background:'+safeColor(s.color)+'"></span>'+esc(s.name)+'</button>';
+  });
+  h+='<button class="chip" data-f="__manage">＋ Subjects</button>';
+  $("chips").innerHTML=h;
+}
+function renderLibrary(){
+  renderChips();
+  const list = filteredPrompts(false);
+  $("cards").innerHTML = list.map(p=>cardHTML(p,false)).join("");
+  $("emptyLib").classList.toggle("hidden", list.length>0);
+  $("cards").classList.toggle("hidden", list.length===0);
+}
+function renderPrivate(){
+  $("privateToggle").textContent = S.privateShown ? "Hide private prompts" : "Show private prompts";
+  const box = $("vaultCards");
+  box.classList.toggle("hidden", !S.privateShown);
+  if(!S.privateShown) return;
+  const list = filteredPrompts(true);
+  box.innerHTML = list.map(p=>cardHTML(p,true)).join("") ||
+    '<div style="color:var(--muted)">No private prompts yet. Tick "Keep private" when saving.</div>';
+}
+function renderAll(){ fillSubjectSelect($("fSubject")); renderLibrary(); renderPrivate(); }
+
+/* ============ actions ============ */
+async function copyText(t){
+  if(navigator.clipboard && typeof navigator.clipboard.writeText === "function"){
+    try{ await navigator.clipboard.writeText(t); toast("Copied"); return; }catch(e){}
+  }
+  const ta=document.createElement("textarea");
+  ta.value=t; ta.readOnly=true;
+  ta.style.cssText="position:fixed;left:-9999px;top:0;opacity:0";
+  document.body.appendChild(ta);
+  ta.focus(); ta.select(); ta.setSelectionRange(0,ta.value.length);
+  let copied=false;
+  try{ copied=!!document.execCommand("copy"); }catch(e){}
+  ta.remove();
+  toast(copied ? "Copied" : "Copy failed — open View and copy manually");
+}
+function findP(id){ return S.data.prompts.find(p=>p.id===id); }
+function openView(id){
+  const p=findP(id); if(!p) return;
+  S.viewingId=id;
+  $("mTitle").textContent=p.title;
+  $("mBody").textContent=p.body||"";
+  $("mBody").classList.remove("hidden"); $("mEdit").classList.add("hidden");
+  $("mSaveEdit").classList.add("hidden"); $("mEditBtn").classList.remove("hidden");
+  $("promptOverlay").classList.add("open");
+}
+function openEdit(id){
+  const p=findP(id); if(!p) return;
+  S.editingId=id;
+  $("mTitle").textContent="Edit prompt";
+  fillSubjectSelect($("mEditSubject"), p.subjectId);
+  $("mEditTitle").value=p.title; $("mEditBody").value=p.body||"";
+  $("mBody").classList.add("hidden"); $("mEdit").classList.remove("hidden");
+  $("mSaveEdit").classList.remove("hidden"); $("mEditBtn").classList.add("hidden");
+  $("promptOverlay").classList.add("open");
+}
+document.addEventListener("click", function(e){
+  const chip=e.target.closest(".chip");
+  if(chip){
+    const f=chip.getAttribute("data-f");
+    if(f==="__manage"){ manageSubjects(); return; }
+    S.filter=f; renderLibrary(); return;
+  }
+  const btn=e.target.closest("[data-act]");
+  if(!btn) return;
+  const card=e.target.closest("[data-id]");
+  const id=btn.getAttribute("data-id")||(card&&card.getAttribute("data-id"));
+  const act=btn.getAttribute("data-act");
+  const p=id&&findP(id);
+  if(act==="fav"&&p){ changeData(d=>{ const x=d.prompts.find(x=>x.id===id); x.favorite=!x.favorite; }); }
+  else if(act==="copy"&&p){ copyText(p.body||""); }
+  else if(act==="view"&&p){ openView(id); }
+  else if(act==="dup"&&p){
+    const np={id:uid(),title:p.title+" (copy)",subjectId:p.subjectId,body:p.body||"",isPrivate:p.isPrivate,favorite:false,createdAt:new Date().toISOString(),updatedAt:new Date().toISOString()};
+    if(changeData(d=>d.prompts.push(np))) toast("Duplicated");
+  }
+  else if(act==="del"&&p){
+    if(confirm('Delete "'+p.title+'"?')){
+      if(changeData(d=>{ d.prompts=d.prompts.filter(x=>x.id!==id); })) toast("Deleted");
+    }
+  }
+});
+
+/* ============ save new ============ */
+$("saveBtn").addEventListener("click", function(){
+  const title=$("fTitle").value.trim(), body=$("fBody").value.trim(), isPrivate=$("fPrivate").checked;
+  if(!title||!body){ toast("Give it a name and a prompt first"); return; }
+  const p={id:uid(),title:title,subjectId:$("fSubject").value,body:body,isPrivate:isPrivate,favorite:false,createdAt:new Date().toISOString(),updatedAt:new Date().toISOString()};
+  if(changeData(d=>d.prompts.push(p))){
+    $("fTitle").value=""; $("fBody").value=""; $("fPrivate").checked=false;
+    toast("Saved");
+  }
+});
+
+/* ============ private section ============ */
+$("privateToggle").addEventListener("click", function(){ S.privateShown=!S.privateShown; renderPrivate(); });
+
+/* ============ subjects ============ */
+function manageSubjects(){
+  const names=S.data.subjects.map(s=>s.name).join(", ");
+  const action=prompt("Subjects: "+names+"\n\nType: add <name> | rename <old> to <new> | del <name>");
+  if(!action) return;
+  const m=action.match(/^(add|rename|del)\s+(.+)$/i);
+  if(!m){ toast("Could not understand"); return; }
+  const cmd=m[1].toLowerCase(), rest=m[2].trim();
+  const PASTELS=["#b79ced","#f5a8c4","#a9d9ec","#f7dc8b","#a9e7cd","#d9b8f0","#f2b8a0"];
+  const byName=name=>S.data.subjects.find(x=>x.name.toLowerCase()===name.toLowerCase());
+  let deletedId=null;
+  if(cmd==="add"){
+    if(!rest || rest.length>120 || byName(rest)){ toast("Subject is empty, too long, or already exists"); return; }
+    if(changeData(d=>d.subjects.push({id:uid(),name:rest,color:PASTELS[d.subjects.length%PASTELS.length]}))) toast("Subjects updated");
+  }else if(cmd==="del"){
+    const subject=byName(rest);
+    if(!subject || subject.id==="s-general"){ toast("Cannot delete that subject"); return; }
+    deletedId=subject.id;
+    if(changeData(d=>{
+      d.prompts.forEach(p=>{ if(p.subjectId===deletedId) p.subjectId="s-general"; });
+      d.subjects=d.subjects.filter(x=>x.id!==deletedId);
+    })){
+      if(S.filter===deletedId){ S.filter="all"; renderAll(); }
+      toast("Subjects updated");
+    }
+  }else{
+    const rm=rest.match(/^(.+?)\s+to\s+(.+)$/i);
+    if(!rm){ toast("Use: rename Old to New"); return; }
+    const subject=byName(rm[1].trim()), newName=rm[2].trim();
+    if(!subject || !newName || newName.length>120 || (byName(newName) && byName(newName).id!==subject.id)){
+      toast("Subject not found or name already in use"); return;
+    }
+    if(changeData(d=>{ d.subjects.find(x=>x.id===subject.id).name=newName; })) toast("Subjects updated");
+  }
+}
+
+/* ============ search / sort ============ */
+$("search").addEventListener("input", function(){ S.search=this.value; renderLibrary(); renderPrivate(); });
+$("sortSel").addEventListener("change", function(){ S.sort=this.value; renderLibrary(); renderPrivate(); });
+document.addEventListener("keydown", function(e){
+  if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==="k"){ e.preventDefault(); $("search").focus(); }
+});
+
+/* ============ export / import (backup and move between browsers) ============ */
+$("exportBtn").addEventListener("click", function(){
+  const blob=new Blob([JSON.stringify({subjects:S.data.subjects,prompts:S.data.prompts},null,2)],{type:"application/json"});
+  const a=document.createElement("a"); a.href=URL.createObjectURL(blob); a.download="procap-export.json"; a.click();
+  setTimeout(()=>URL.revokeObjectURL(a.href),2000); toast("Exported");
+});
+$("importBtn").addEventListener("click", ()=>$("importFile").click());
+function mergeBackup(j){
+  if(!j || typeof j!=="object" || !Array.isArray(j.subjects) || !Array.isArray(j.prompts))
+    throw Error("Not a ProCap backup");
+  // Validate everything before changing the saved library.
+  const subjects=j.subjects.map(cleanSubject), prompts=j.prompts.map(cleanPrompt);
+  const next=JSON.parse(JSON.stringify(S.data));
+  const byId=new Map(next.subjects.map(x=>[x.id,x]));
+  const byName=new Map(next.subjects.map(x=>[x.name.toLowerCase(),x]));
+  const subjectIds=new Map();
+  for(const s of subjects){
+    const nameMatch=byName.get(s.name.toLowerCase());
+    let dest;
+    if(nameMatch) dest=nameMatch.id;
+    else if(byId.has(s.id)){
+      // An ID collision is not the same subject; assign an unused ID.
+      do{ dest=uid(); }while(byId.has(dest));
+      const fresh={...s,id:dest}; next.subjects.push(fresh);
+      byId.set(dest,fresh); byName.set(fresh.name.toLowerCase(),fresh);
+    }else{
+      dest=s.id; next.subjects.push(s);
+      byId.set(dest,s); byName.set(s.name.toLowerCase(),s);
+    }
+    subjectIds.set(s.id,dest);
+  }
+  const ids=new Set(next.prompts.map(x=>x.id));
+  for(const p of prompts){
+    if(ids.has(p.id)) continue;
+    const dest=subjectIds.get(p.subjectId) || (byId.has(p.subjectId) ? p.subjectId : "s-general");
+    next.prompts.push({...p,subjectId:dest}); ids.add(p.id);
+  }
+  return next;
+}
+$("importFile").addEventListener("change", function(){
+  const f=this.files[0]; if(!f) return;
+  this.value="";
+  const reader=new FileReader();
+  reader.onload=function(){
+    let next;
+    try{ next=mergeBackup(JSON.parse(reader.result)); }
+    catch(e){ toast("Import failed: invalid backup file"); return; }
+    if(commitData(next,true)) toast("Imported");
+  };
+  reader.onerror=()=>toast("Import failed: could not read file");
+  reader.readAsText(f);
+});
+
+/* ============ modal buttons ============ */
+$("mClose").addEventListener("click", ()=>$("promptOverlay").classList.remove("open"));
+$("mEditBtn").addEventListener("click", ()=>{ if(S.viewingId) openEdit(S.viewingId); });
+$("mCopy").addEventListener("click", function(){
+  const p=S.viewingId&&findP(S.viewingId);
+  if(p) copyText(p.body||"");
+});
+$("mSaveEdit").addEventListener("click", function(){
+  const p=S.editingId&&findP(S.editingId); if(!p) return;
+  const title=$("mEditTitle").value.trim(), body=$("mEditBody").value;
+  if(!title || !body.trim()){ toast("Give it a name and a prompt first"); return; }
+  if(changeData(d=>{
+    const x=d.prompts.find(x=>x.id===p.id);
+    x.title=title; x.subjectId=$("mEditSubject").value;
+    x.body=body; x.updatedAt=new Date().toISOString();
+  })){
+    $("promptOverlay").classList.remove("open"); toast("Saved");
+  }
+});
+$("promptOverlay").addEventListener("click", function(e){ if(e.target===this) this.classList.remove("open"); });
+
+/* ============ init ============ */
+loadLocal();
+renderAll();
+if(!S.storageError) setStatus("Saved in this browser");
+</script>
+</body>
+</html>
