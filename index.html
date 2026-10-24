@@ -41,7 +41,7 @@
 
   --font-ui:"Figtree",system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
   --font-display:"Young Serif","Iowan Old Style","Palatino Linotype",Palatino,"Book Antiqua",Georgia,serif;
-  --tk:1.12;
+  --tk:1.12; --mk:.56;
 }
 *,*::before,*::after{box-sizing:border-box}
 html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
@@ -94,6 +94,7 @@ svg{display:block}
 .btn-lg{--bh:var(--h-lg);padding:0 22px;font-size:16px;border-radius:14px}
 .btn-icon{padding:0;width:var(--bh)}
 .btn-block{width:100%}
+.btn-field{--bh:var(--h-field)}
 .btn[disabled]{opacity:.42;pointer-events:none}
 .btn.is-done{background:var(--ok);border-color:var(--ok);color:#fff}
 @media (pointer:coarse){.btn-sm{--bh:42px}}
@@ -109,7 +110,7 @@ svg{display:block}
   font:500 16px/1.4 var(--font-ui);outline:none;
   transition:border-color var(--t-fast),box-shadow var(--t-fast),background-color var(--t-fast);
 }
-.input::placeholder,.textarea::placeholder{color:#7E7A92;opacity:1}
+.input::placeholder,.textarea::placeholder{color:#A9A6B9;opacity:1}
 .input:hover,.select select:hover,.textarea:hover{border-color:var(--line-3)}
 .input:focus,.select select:focus,.textarea:focus{border-color:var(--ink);box-shadow:0 0 0 4px rgba(140,150,236,.28);background:#fff}
 .textarea{height:auto;min-height:132px;max-height:42vh;padding:13px 16px;line-height:1.6;resize:none;overflow-y:auto}
@@ -152,7 +153,15 @@ svg{display:block}
 .page{max-width:1240px;margin:0 auto;padding:22px 40px 40px}
 .topbar{display:flex;align-items:center;justify-content:space-between;gap:16px;min-height:56px;margin-bottom:40px}
 .brand{display:inline-flex;align-items:center;gap:12px;text-decoration:none;color:var(--ink);border-radius:var(--r)}
-.brand-mark{width:38px;height:38px;flex:none}
+.brand-mark{width:38px;height:38px;flex:none;overflow:visible}
+.bm-head{transform-box:view-box;transform-origin:20px 20px;animation:bmBob 4.8s cubic-bezier(.45,0,.35,1) infinite}
+.bm-tuft{transform-box:fill-box;transform-origin:20% 100%;animation:bmTuft 4.8s ease-in-out infinite}
+.bm-look{animation:bmLook 9.6s ease-in-out infinite}
+.bm-blink{transform-box:fill-box;transform-origin:50% 50%;animation:bmBlink 4.8s linear infinite}
+@keyframes bmBob{0%,100%{transform:translateY(0)}22%{transform:translateY(-1.8px)}46%{transform:translateY(.2px)}70%{transform:translateY(2.4px)}86%{transform:translateY(.6px)}}
+@keyframes bmTuft{0%,100%{transform:rotate(0)}24%{transform:rotate(-14deg)}48%{transform:rotate(7deg)}72%{transform:rotate(-5deg)}}
+@keyframes bmLook{0%,24%,80%,100%{transform:translateX(0)}30%,46%{transform:translateX(-1.3px)}54%,72%{transform:translateX(1.3px)}}
+@keyframes bmBlink{0%,44%,50%,100%{transform:scaleY(1)}47%{transform:scaleY(.1)}}
 .brand-name{font:400 23px/1 var(--font-display);letter-spacing:-.01em}
 .brand-sub{font-size:13.5px;color:var(--ink-3);font-weight:500;padding-left:12px;border-left:1px solid var(--line-2);line-height:1.2}
 .topnav{display:flex;gap:6px;align-items:center}
@@ -164,11 +173,41 @@ svg{display:block}
 .banner p{font-size:15px;line-height:1.5}
 .banner-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
 
-.layout{display:grid;grid-template-columns:minmax(0,1fr) 410px;grid-template-areas:"hero side" "lib side";column-gap:64px;align-items:start}
+.layout{display:grid;grid-template-columns:minmax(0,1fr) 410px;grid-template-areas:"top side" "banner side" "hero side" "lib side";grid-template-rows:auto auto auto 1fr;column-gap:64px;align-items:start}
+.topbar{grid-area:top}
+.banner{grid-area:banner}
 .hero{grid-area:hero;padding:34px 0 52px}
 .side{grid-area:side;align-self:start}
 .library{grid-area:lib;min-width:0}
-@media (min-width:1080px){.side.is-sticky{position:sticky;top:12px}}
+/* Desktop: the composer is a pinned pane that always fits the window, so Tuck never scrolls away. */
+@media (min-width:1080px) and (min-height:620px){
+  .side{position:sticky;top:16px;height:min(calc(100vh - 32px),880px);height:min(calc(100dvh - 32px),880px)}
+  .composer-wrap{height:100%;display:flex;flex-direction:column}
+  .composer{flex:1;min-height:0;display:flex;flex-direction:column;overflow-y:auto;overscroll-behavior:contain}
+  .composer .field-grow{flex:1 1 auto;display:flex;flex-direction:column;min-height:124px}
+  .composer-more{flex:none}
+  .composer .field-grow .textarea{flex:1 1 auto;min-height:96px;max-height:none}
+  .composer .two-md{flex:none}
+  .composer-foot{flex:none}
+}
+@media (min-width:1080px) and (max-height:800px){
+  :root{--tk:.96}
+  .composer-head p{display:none}
+  .composer{padding-top:20px}
+  .composer-head{margin-bottom:12px}
+}
+@media (min-width:1080px) and (max-height:700px){
+  .composer .field-grow{min-height:100px}
+  .composer .field-grow .textarea{min-height:72px}
+  .composer .two-md{margin-top:12px!important}
+  .composer .field + .field{margin-top:12px}
+  .composer-foot{margin-top:14px;padding-top:12px}
+  .composer-actions{margin-top:10px}
+  .composer{padding-top:18px;padding-bottom:16px}
+  .composer-head h2{font-size:23px}
+}
+.kbd-hint{display:none}
+@media (min-width:1080px) and (min-height:900px) and (hover:hover){.kbd-hint{display:block}}
 
 /* ---------- Hero ---------- */
 .hero h1{
@@ -190,42 +229,54 @@ svg{display:block}
 .subject-line{display:flex;gap:8px}
 .subject-line .select{flex:1}
 .inline-add{display:flex;gap:8px;margin-top:10px;padding:10px;border-radius:var(--r);background:var(--surface-2);border:1px solid var(--line)}
-.inline-add .input{height:44px}
 .composer-foot{margin-top:20px;padding-top:18px;border-top:1px solid var(--line)}
 .composer-actions{display:flex;gap:10px;align-items:center;margin-top:16px}
 .composer-actions .btn-primary{flex:1}
 .kbd-hint{margin-top:10px;text-align:center;font-size:13px;color:var(--ink-3)}
 kbd{font:600 12px/1 var(--font-ui);padding:3px 6px;border-radius:6px;border:1px solid var(--line-2);background:var(--surface-2);color:var(--ink-2)}
 
-.tuck{position:absolute;top:0;right:30px;width:calc(120px * var(--tk));height:calc(100px * var(--tk));pointer-events:none}
+/* Characters share one rig: .tk is the stage, sink/hop wrappers move the body,
+   hands sit in front of the card edge. Tuck is the big one; the minis are scaled copies. */
+.tk{position:absolute;top:0;pointer-events:none;--scale:var(--tk)}
+.tuck{right:30px;width:calc(120px * var(--tk));height:calc(100px * var(--tk))}
+.mini{--scale:var(--mk);top:calc(86px * var(--tk) - 86px * var(--mk));width:calc(120px * var(--mk));height:calc(100px * var(--mk))}
+.mini-a{right:calc(30px + 120px * var(--tk) + 2px)}
+.mini-b{right:calc(30px + 120px * var(--tk) + 120px * var(--mk) + 12px)}
 .tuck-sink,.tuck-hop{position:absolute;inset:0}
-.tuck-sink{z-index:0;transform:translateY(calc(var(--sink,0) * 1px * var(--tk)));transition:transform 900ms cubic-bezier(.34,1.18,.5,1)}
-.tuck.is-hidden .tuck-sink{--sink:96}
+.tuck-sink{z-index:0;transform:translateY(calc(var(--sink,0) * 1px * var(--scale)));transition:transform 900ms cubic-bezier(.34,1.18,.5,1)}
+.tk.is-hidden .tuck-sink,.mini.is-down .tuck-sink{--sink:100}
+.mini .tuck-sink{transition:transform 640ms 110ms cubic-bezier(.34,1.3,.5,1)}
+.mini.is-down .tuck-sink{transition:transform 480ms cubic-bezier(.5,0,.75,0)}
 .tuck-hop{transform-origin:50% 100%}
 .tuck-body{position:absolute;inset:0;width:100%;height:100%;overflow:visible;pointer-events:none;transform-origin:50% 92%;animation:tkBreathe 5.4s ease-in-out infinite;will-change:transform}
+.mini .tuck-body{animation-duration:4.2s}
 .tuck-body .tk-hit{pointer-events:visiblePainted;cursor:default}
-.tuck.is-asleep .tuck-body{animation-duration:8s}
-.tuck.is-paused .tuck-body{animation-play-state:paused}
+.mini.is-down .tk-hit{pointer-events:none}
+.tk.is-asleep .tuck-body{animation-duration:8s}
+.tk.is-paused .tuck-body,.mini.is-down .tuck-body{animation-play-state:paused}
 @keyframes tkBreathe{0%,100%{transform:scale(1,1)}50%{transform:scale(.992,1.022)}}
 .tuck-hands{position:absolute;inset:0;width:100%;height:100%;overflow:visible;z-index:2;pointer-events:none;transition:opacity 420ms var(--ease),transform 520ms var(--ease)}
-.tuck.is-hidden .tuck-hands{opacity:0;transform:translateY(4px)}
+.mini .tuck-hands{transition:opacity 220ms ease,transform 320ms var(--ease)}
+.mini.is-down .tuck-hands{transition-delay:300ms,300ms}
+.tk.is-hidden .tuck-hands,.mini.is-down .tuck-hands{opacity:0;transform:translateY(4px)}
 .tuck-hands .tk-hand{transform-box:fill-box;transform-origin:50% 100%}
 .tk-eyes{transform:translate(calc(var(--lx,0) * 3.4px),calc(var(--ly,0) * 2.8px));transition:transform 440ms cubic-bezier(.3,0,.15,1)}
 .tk-face{transform:translate(calc(var(--lx,0) * 1.8px),calc(var(--ly,0) * 1.5px));transition:transform 640ms 60ms cubic-bezier(.3,0,.15,1)}
 .tk-tilt{transform-box:view-box;transform-origin:60px 100px;transform:rotate(calc(var(--tilt,0) * 1deg));transition:transform 820ms 90ms cubic-bezier(.34,1.25,.45,1)}
-.tk-tuft{transform-box:view-box;transform-origin:60px 25px;transform:rotate(calc(var(--tilt,0) * -1.8deg));transition:transform 1100ms 180ms cubic-bezier(.3,1.7,.4,1)}
-.tk-tuft-wob{transform-box:view-box;transform-origin:60px 25px}
+.tk-tuft{transform-box:view-box;transform:rotate(calc(var(--tilt,0) * -1.8deg));transition:transform 1100ms 180ms cubic-bezier(.3,1.7,.4,1)}
+.tk-tuft-wob{transform-box:view-box}
 .tk-eyes-open{transform-box:fill-box;transform-origin:50% 55%;transition:opacity 120ms}
-.tk-eyes-happy,.tk-eyes-sleep,.tk-m-happy,.tk-m-o,.tk-m-flat{opacity:0;transition:opacity 140ms}
-.tuck[data-face="happy"] .tk-eyes-open,.tuck[data-face="sleep"] .tk-eyes-open{opacity:0}
-.tuck[data-face="happy"] .tk-eyes-happy{opacity:1}
-.tuck[data-face="sleep"] .tk-eyes-sleep{opacity:1}
-.tuck[data-face="wide"] .tk-eyes-open{transform:scale(1.16)}
-.tuck[data-mouth="happy"] .tk-m-smile,.tuck[data-mouth="o"] .tk-m-smile,.tuck[data-mouth="flat"] .tk-m-smile{opacity:0}
+.tk-m-yawn{transform-box:fill-box;transform-origin:50% 40%}
+.tk-eyes-happy,.tk-eyes-sleep,.tk-m-happy,.tk-m-o,.tk-m-flat,.tk-m-yawn{opacity:0;transition:opacity 140ms}
 .tk-m-smile{transition:opacity 140ms}
-.tuck[data-mouth="happy"] .tk-m-happy,.tuck[data-mouth="o"] .tk-m-o,.tuck[data-mouth="flat"] .tk-m-flat{opacity:1}
+.tk[data-face="happy"] .tk-eyes-open,.tk[data-face="sleep"] .tk-eyes-open{opacity:0}
+.tk[data-face="happy"] .tk-eyes-happy{opacity:1}
+.tk[data-face="sleep"] .tk-eyes-sleep{opacity:1}
+.tk[data-face="wide"] .tk-eyes-open{transform:scale(1.16)}
+.tk:not([data-mouth="smile"]) .tk-m-smile{opacity:0}
+.tk[data-mouth="happy"] .tk-m-happy,.tk[data-mouth="o"] .tk-m-o,.tk[data-mouth="flat"] .tk-m-flat,.tk[data-mouth="yawn"] .tk-m-yawn{opacity:1}
 .tk-blush{transition:opacity 400ms}
-.tuck[data-face="happy"] .tk-blush{opacity:.75}
+.tk[data-face="happy"] .tk-blush{opacity:.75}
 
 /* ---------- Library ---------- */
 .lib-head{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;margin-bottom:18px}
@@ -405,7 +456,7 @@ dialog.dlg.fallback{position:fixed;inset:0;margin:auto;z-index:90;height:fit-con
 /* ---------- Responsive ---------- */
 @media (max-width:1180px){.layout{column-gap:44px;grid-template-columns:minmax(0,1fr) 380px}.page{padding-inline:32px}}
 @media (max-width:1079px){
-  .layout{grid-template-columns:minmax(0,1fr);grid-template-areas:"hero" "side" "lib"}
+  .layout{grid-template-columns:minmax(0,1fr);grid-template-areas:"top" "banner" "hero" "side" "lib"}
   .hero{padding:4px 0 8px}
   .hero h1{max-width:14ch}
   .side{margin:28px 0 56px}
@@ -481,27 +532,30 @@ dialog.dlg.fallback{position:fixed;inset:0;margin:auto;z-index:90;height:fit-con
 <noscript><p style="padding:16px;background:#FFF6E2;margin:0">ProCap Local needs JavaScript turned on to save and show your prompts.</p></noscript>
 
 <div class="page">
-  <header class="topbar">
-    <a class="brand" href="#top" id="top">
-      <svg class="brand-mark" viewBox="0 0 40 40" aria-hidden="true">
-        <path d="M9 21c0-8 5-13.5 11-13.5S31 13 31 21" fill="#8C96EC"/>
-        <path d="M19 8.2c-.6-2.6.8-4.6 3.4-5-.8 1.5-1.2 3-.8 4.9" fill="#F2B640"/>
-        <circle cx="16.2" cy="15.6" r="1.6" fill="#272140"/><circle cx="23.8" cy="15.6" r="1.6" fill="#272140"/>
+
+  <div class="layout">
+    <header class="topbar">
+      <a class="brand" href="#top" id="top">
+        <svg class="brand-mark" viewBox="0 0 40 40" aria-hidden="true">
+        <g class="bm-head">
+          <path class="bm-tuft" d="M19 8.2c-.6-2.6.8-4.6 3.4-5-.8 1.5-1.2 3-.8 4.9" fill="#F2B640"/>
+          <path d="M9 21c0-8 5-13.5 11-13.5S31 13 31 21" fill="#8C96EC"/>
+          <g class="bm-look"><g class="bm-blink"><circle cx="16.2" cy="15.6" r="1.6" fill="#272140"/><circle cx="23.8" cy="15.6" r="1.6" fill="#272140"/></g></g>
+        </g>
         <rect x="3.5" y="19" width="33" height="18" rx="6" fill="#272140"/>
-        <rect x="11" y="18" width="5" height="3" rx="1.5" fill="#8C96EC"/><rect x="24" y="18" width="5" height="3" rx="1.5" fill="#8C96EC"/>
+        <rect class="bm-hand" x="11" y="18" width="5" height="3" rx="1.5" fill="#8C96EC"/><rect class="bm-hand" x="24" y="18" width="5" height="3" rx="1.5" fill="#8C96EC"/>
       </svg>
-      <span class="brand-name">ProCap</span>
-      <span class="brand-sub">Your prompt library</span>
-    </a>
-    <nav class="topnav" aria-label="Library tools">
-      <button type="button" class="btn btn-quiet" id="navSubjects" aria-label="Subjects"><span id="icoSubjects"></span><span class="label-long">Subjects</span></button>
-      <button type="button" class="btn btn-quiet" id="navBackup"><span id="icoBackup"></span><span>Backup</span></button>
-    </nav>
-  </header>
+        <span class="brand-name">ProCap</span>
+        <span class="brand-sub">Your prompt library</span>
+      </a>
+      <nav class="topnav" aria-label="Library tools">
+        <button type="button" class="btn btn-quiet" id="navSubjects" aria-label="Subjects"><span id="icoSubjects"></span><span class="label-long">Subjects</span></button>
+        <button type="button" class="btn btn-quiet" id="navBackup"><span id="icoBackup"></span><span>Backup</span></button>
+      </nav>
+    </header>
 
-  <div class="banner" id="banner" role="alert" hidden></div>
+    <div class="banner" id="banner" role="alert" hidden></div>
 
-  <main class="layout">
     <section class="hero" aria-labelledby="heroTitle">
       <h1 id="heroTitle">Good ideas deserve a little home.</h1>
       <p class="hero-sub">Keep the prompts that work for you in one calm place. Find them in a moment and copy them into ChatGPT, Claude, or anywhere else.</p>
@@ -510,64 +564,16 @@ dialog.dlg.fallback{position:fixed;inset:0;margin:auto;z-index:90;height:fit-con
 
     <aside class="side" aria-label="Add a prompt">
       <div class="composer-wrap">
-        <div class="tuck is-hidden" id="tuck" data-face="open" data-mouth="smile" aria-hidden="true">
-          <div class="tuck-sink"><div class="tuck-hop">
-            <svg class="tuck-body" viewBox="0 0 120 100" focusable="false">
-              <defs>
-                <linearGradient id="tkGrad" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0" stop-color="#A2AAF3"/><stop offset=".62" stop-color="#8790EA"/><stop offset="1" stop-color="#7680E0"/>
-                </linearGradient>
-                <radialGradient id="tkSheen" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#fff" stop-opacity=".55"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></radialGradient>
-              </defs>
-              <g class="tk-tilt">
-                <g class="tk-tuft"><g class="tk-tuft-wob">
-                  <path d="M58.6 26.5c-3.4-8.6.4-16.5 9.8-18.6-2.3 3.4-3.5 7-3.2 10.9.2 3.2-2 6.4-6.6 7.7z" fill="#F2B640"/>
-                  <path d="M57.4 26.6c-4.4-4.6-5.4-9.8-3-14.4.3 4.4 2 8.6 5.4 12.4z" fill="#E7A22A"/>
-                </g></g>
-                <path class="tk-hit" d="M11 140C11 112 12 90 15.5 72 20.5 43 37.5 24.5 60 24.5S99.5 43 104.5 72C108 90 109 112 109 140Z" fill="url(#tkGrad)"/>
-                <path d="M86 34c11 9 17.5 24 20.5 40 2 11 2.6 30 2.6 66H96c0-40-1-62-4.6-80C89.4 48 88 40 86 34z" fill="#5E68D2" opacity=".16"/>
-                <ellipse cx="41" cy="44" rx="15" ry="10" fill="url(#tkSheen)" transform="rotate(-28 41 44)"/>
-                <g class="tk-face">
-                  <ellipse class="tk-blush" cx="36.5" cy="69.5" rx="6.6" ry="3.6" fill="#FF9FBC" opacity=".5"/>
-                  <ellipse class="tk-blush" cx="83.5" cy="69.5" rx="6.6" ry="3.6" fill="#FF9FBC" opacity=".5"/>
-                  <g class="tk-eyes">
-                    <g class="tk-eyes-open">
-                      <ellipse cx="46" cy="59" rx="4" ry="5.3" fill="#272140"/>
-                      <ellipse cx="74" cy="59" rx="4" ry="5.3" fill="#272140"/>
-                      <circle cx="47.4" cy="57" r="1.35" fill="#fff"/>
-                      <circle cx="75.4" cy="57" r="1.35" fill="#fff"/>
-                    </g>
-                    <g class="tk-eyes-happy" fill="none" stroke="#272140" stroke-width="2.6" stroke-linecap="round">
-                      <path d="M41.6 60.5q4.4-6 8.8 0"/><path d="M69.6 60.5q4.4-6 8.8 0"/>
-                    </g>
-                    <g class="tk-eyes-sleep" fill="none" stroke="#272140" stroke-width="2.4" stroke-linecap="round">
-                      <path d="M41.8 59.2q4.2 3.4 8.4 0"/><path d="M69.8 59.2q4.2 3.4 8.4 0"/>
-                    </g>
-                  </g>
-                  <g fill="none" stroke="#272140" stroke-linecap="round" stroke-linejoin="round">
-                    <path class="tk-m-smile" d="M56.2 68.2q3.8 3.2 7.6 0" stroke-width="2.2"/>
-                    <path class="tk-m-happy" d="M55 67.4q5 6 10 0z" stroke-width="2" fill="#272140"/>
-                    <path class="tk-m-flat" d="M56.8 69.2h6.4" stroke-width="2.2"/>
-                  </g>
-                  <ellipse class="tk-m-o" cx="60" cy="69.4" rx="2.3" ry="2.8" fill="#272140"/>
-                </g>
-              </g>
-            </svg>
-          </div></div>
-          <svg class="tuck-hands" viewBox="0 0 120 100" focusable="false">
-            <ellipse cx="35" cy="93.2" rx="11" ry="2.4" fill="#272140" opacity=".08"/>
-            <ellipse cx="85" cy="93.2" rx="11" ry="2.4" fill="#272140" opacity=".08"/>
-            <g class="tk-hand"><path d="M23.5 89.6c0-5.6 5-9.3 11.5-9.3s11.5 3.7 11.5 9.3c0 2.6-2.1 3.9-4.6 3.9H28.1c-2.5 0-4.6-1.3-4.6-3.9z" fill="#8790EA"/><path d="M31.4 88.4v3M38.6 88.4v3" stroke="#6670D0" stroke-width="1.4" stroke-linecap="round" opacity=".7"/></g>
-            <g class="tk-hand"><path d="M73.5 89.6c0-5.6 5-9.3 11.5-9.3s11.5 3.7 11.5 9.3c0 2.6-2.1 3.9-4.6 3.9H78.1c-2.5 0-4.6-1.3-4.6-3.9z" fill="#8790EA"/><path d="M81.4 88.4v3M88.6 88.4v3" stroke="#6670D0" stroke-width="1.4" stroke-linecap="round" opacity=".7"/></g>
-          </svg>
-        </div>
+        <div class="tk mini mini-b is-down" id="miniB" aria-hidden="true"></div>
+        <div class="tk mini mini-a is-down" id="miniA" aria-hidden="true"></div>
+        <div class="tk tuck is-hidden" id="tuck" aria-hidden="true"></div>
 
         <section class="composer" id="composer" aria-labelledby="composerTitle">
           <div class="composer-head">
             <h2 id="composerTitle">New prompt</h2>
             <p>Write it once, use it whenever you like.</p>
           </div>
-          <div class="field">
+          <div class="field field-grow">
             <label class="label" for="fBody">Your prompt</label>
             <textarea class="textarea" id="fBody" placeholder="Write or paste the words you want to reuse" aria-describedby="fBodyErr"></textarea>
             <p class="error" id="fBodyErr" hidden></p>
@@ -575,20 +581,19 @@ dialog.dlg.fallback{position:fixed;inset:0;margin:auto;z-index:90;height:fit-con
           <div class="composer-more"><div class="two-md" style="margin-top:18px">
             <div class="field">
               <label class="label" for="fTitle">Name <span class="opt">optional</span></label>
-              <input class="input" type="text" id="fTitle" maxlength="120" autocomplete="off" placeholder="e.g. Friendly email reply" aria-describedby="fTitleHint">
-              <p class="hint" id="fTitleHint">Left blank, the first few words become the name.</p>
+              <input class="input" type="text" id="fTitle" maxlength="120" autocomplete="off" placeholder="Uses the first words if left blank">
             </div>
             <div class="field">
               <label class="label" for="fSubject">Subject</label>
               <div class="subject-line">
                 <div class="select"><select id="fSubject"></select></div>
-                <button type="button" class="btn btn-secondary" id="fNewSubject" aria-expanded="false" aria-controls="fInlineAdd"><span class="ico-plus"></span>New</button>
+                <button type="button" class="btn btn-secondary btn-field" id="fNewSubject" aria-expanded="false" aria-controls="fInlineAdd"><span class="ico-plus"></span>New</button>
               </div>
               <div class="inline-add" id="fInlineAdd" hidden>
                 <label class="sr-only" for="fInlineName">New subject name</label>
                 <input class="input" type="text" id="fInlineName" maxlength="120" placeholder="Subject name" autocomplete="off">
-                <button type="button" class="btn btn-primary" id="fInlineSave">Add</button>
-                <button type="button" class="btn btn-quiet btn-icon" id="fInlineCancel" aria-label="Cancel new subject"><span class="ico-x"></span></button>
+                <button type="button" class="btn btn-primary btn-field" id="fInlineSave">Add</button>
+                <button type="button" class="btn btn-quiet btn-icon btn-field" id="fInlineCancel" aria-label="Cancel new subject"><span class="ico-x"></span></button>
               </div>
             </div>
           </div>
@@ -607,7 +612,7 @@ dialog.dlg.fallback{position:fixed;inset:0;margin:auto;z-index:90;height:fit-con
       </div>
     </aside>
 
-    <section class="library" id="library" aria-labelledby="libTitle" tabindex="-1">
+    <main class="library" id="library" aria-labelledby="libTitle" tabindex="-1">
       <div class="lib-head">
         <div>
           <h2 id="libTitle">Your prompts</h2>
@@ -647,8 +652,8 @@ dialog.dlg.fallback{position:fixed;inset:0;margin:auto;z-index:90;height:fit-con
         <div class="cards" id="privateCards" hidden></div>
         <p class="private-empty" id="privateEmpty" hidden></p>
       </section>
-    </section>
-  </main>
+    </main>
+  </div>
 
   <footer class="footer">
     <span class="footer-status"><span class="status-dot" id="statusDot"></span><span id="statusText">Saved in this browser</span></span>
@@ -719,7 +724,7 @@ dialog.dlg.fallback{position:fixed;inset:0;margin:auto;z-index:90;height:fit-con
       <label class="label" for="sdNew">Add a subject</label>
       <div class="subj-add">
         <input class="input" type="text" id="sdNew" maxlength="120" placeholder="e.g. Family" autocomplete="off">
-        <button type="button" class="btn btn-primary" id="sdAdd"><span class="ico-plus"></span>Add</button>
+        <button type="button" class="btn btn-primary btn-field" id="sdAdd"><span class="ico-plus"></span>Add</button>
       </div>
       <div class="suggest" id="sdSuggest"></div>
       <ul class="subj-list" id="sdList"></ul>
@@ -1417,7 +1422,10 @@ $("promptDlg").addEventListener("keydown", e => { if(S.editing && e.key === "Ent
 $("promptDlg").addEventListener("procap-closed", () => { S.viewingId = null; S.editing = false; });
 
 /* ---------- Composer ---------- */
+const paneMQ = window.matchMedia ? matchMedia("(min-width:1080px) and (min-height:620px)") : {matches:false};
+if(paneMQ.addEventListener) paneMQ.addEventListener("change", () => growArea($("fBody")));
 function growArea(el){
+  if(el.id === "fBody" && paneMQ.matches){ el.style.height = ""; return; }
   el.style.height = "auto";
   el.style.height = Math.min(el.scrollHeight + 2, Math.round(window.innerHeight * 0.42)) + "px";
 }
@@ -1501,9 +1509,8 @@ $("fPrivate").addEventListener("change", saveDraft);
 $("fSubject").addEventListener("change", () => { S.composerSubjectTouched = true; saveDraft(); });
 $("composer").addEventListener("keydown", e => { if(e.key === "Enter" && (e.metaKey || e.ctrlKey)){ e.preventDefault(); saveNew(); } });
 ["fBody","fTitle"].forEach(id => { $(id).addEventListener("focus", () => Tuck.attend(true)); $(id).addEventListener("blur", () => Tuck.attend(false)); });
-function openComposer(){ if(!$("composer").classList.contains("is-open")){ $("composer").classList.add("is-open"); updateSticky(); } }
+function openComposer(){ $("composer").classList.add("is-open"); }
 $("composer").addEventListener("focusin", openComposer);
-function updateSticky(){ const side = document.querySelector(".side"); side.classList.toggle("is-sticky", window.innerWidth >= 1080 && side.offsetHeight <= window.innerHeight - 24); }
 
 /* inline new subject in composer */
 function toggleInlineAdd(show){
@@ -1746,58 +1753,141 @@ async function bannerAction(a){
    and only changes expression.
    ===================================================================== */
 const Tuck = (function(){
-  const root = $("tuck");
-  const hop = root.querySelector(".tuck-hop");
-  const wob = root.querySelector(".tk-tuft-wob");
-  const eyesOpen = root.querySelector(".tk-eyes-open");
-  const hands = root.querySelectorAll(".tk-hand");
+  /* ---------- One rig, three creatures ---------- */
+  const SKINS = {
+    big:   {id:"tkBig", grad:["#A2AAF3","#8790EA","#7680E0"], shade:"#5E68D2", tuft:["#F2B640","#E7A22A"], hand:"#8790EA", finger:"#6670D0"},
+    orange:{id:"tkOr",  grad:["#FFC694","#F7A266","#EE874B"], shade:"#C45F27", tuft:["#86BE7E","#64A05D"], hand:"#F59C5F", finger:"#C66630"},
+    red:   {id:"tkRd",  grad:["#FFA3A0","#F07576","#E05A5E"], shade:"#B23C43", tuft:["#F2B640","#E7A22A"], hand:"#EE7173", finger:"#B6434A"}
+  };
+  function rigSVG(k, mini){
+    const fy = mini ? 7 : 0, ex = mini ? 13.2 : 14, erx = mini ? 4.7 : 4, ery = mini ? 6.1 : 5.3;
+    const body = mini
+      ? "M12 140C12 110 14 87 20 71 26 47 41 33 60 33S94 47 100 71C106 87 108 110 108 140Z"
+      : "M11 140C11 112 12 90 15.5 72 20.5 43 37.5 24.5 60 24.5S99.5 43 104.5 72C108 90 109 112 109 140Z";
+    const shade = mini
+      ? "M85 41c10 8 15.5 20 18 33 2 11 2.5 30 2.5 66H94c0-38-1-58-4-74C88.2 55 87 47 85 41z"
+      : "M86 34c11 9 17.5 24 20.5 40 2 11 2.6 30 2.6 66H96c0-40-1-62-4.6-80C89.4 48 88 40 86 34z";
+    const tuftT = mini ? ' transform="translate(12 13.6) scale(.8)"' : "";
+    const tuftO = mini ? "60px 34px" : "60px 25px";
+    const eye = cx => '<ellipse cx="'+cx+'" cy="'+(59+fy)+'" rx="'+erx+'" ry="'+ery+'" fill="#272140"/><circle cx="'+(cx+1.5)+'" cy="'+(56.8+fy)+'" r="'+(mini?1.6:1.35)+'" fill="#fff"/>';
+    const L = 60 - ex, Rr = 60 + ex, y = 59 + fy;
+    return '<div class="tuck-sink"><div class="tuck-hop"><svg class="tuck-body" viewBox="0 0 120 100" focusable="false">'+
+      '<defs><linearGradient id="'+k.id+'G" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="'+k.grad[0]+'"/><stop offset=".62" stop-color="'+k.grad[1]+'"/><stop offset="1" stop-color="'+k.grad[2]+'"/></linearGradient>'+
+      '<radialGradient id="'+k.id+'S" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#fff" stop-opacity=".55"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></radialGradient></defs>'+
+      '<g class="tk-tilt">'+
+        '<g class="tk-tuft" style="transform-origin:'+tuftO+'"><g class="tk-tuft-wob" style="transform-origin:'+tuftO+'"><g'+tuftT+'>'+
+          '<path d="M58.6 26.5c-3.4-8.6.4-16.5 9.8-18.6-2.3 3.4-3.5 7-3.2 10.9.2 3.2-2 6.4-6.6 7.7z" fill="'+k.tuft[0]+'"/>'+
+          '<path d="M57.4 26.6c-4.4-4.6-5.4-9.8-3-14.4.3 4.4 2 8.6 5.4 12.4z" fill="'+k.tuft[1]+'"/></g></g></g>'+
+        '<path class="tk-hit" d="'+body+'" fill="url(#'+k.id+'G)"/>'+
+        '<path d="'+shade+'" fill="'+k.shade+'" opacity=".16"/>'+
+        '<ellipse cx="'+(mini?42:41)+'" cy="'+(mini?50:44)+'" rx="'+(mini?13:15)+'" ry="'+(mini?8.5:10)+'" fill="url(#'+k.id+'S)" transform="rotate(-28 '+(mini?42:41)+' '+(mini?50:44)+')"/>'+
+        '<g class="tk-face">'+
+          '<ellipse class="tk-blush" cx="'+(L-9.5)+'" cy="'+(y+10.5)+'" rx="6.6" ry="3.6" fill="#FF9FBC" opacity=".5"/>'+
+          '<ellipse class="tk-blush" cx="'+(Rr+9.5)+'" cy="'+(y+10.5)+'" rx="6.6" ry="3.6" fill="#FF9FBC" opacity=".5"/>'+
+          '<g class="tk-eyes">'+
+            '<g class="tk-eyes-open">'+eye(L)+eye(Rr)+'</g>'+
+            '<g class="tk-eyes-happy" fill="none" stroke="#272140" stroke-width="2.6" stroke-linecap="round"><path d="M'+(L-4.4)+' '+(y+1.5)+'q4.4-6 8.8 0"/><path d="M'+(Rr-4.4)+' '+(y+1.5)+'q4.4-6 8.8 0"/></g>'+
+            '<g class="tk-eyes-sleep" fill="none" stroke="#272140" stroke-width="2.4" stroke-linecap="round"><path d="M'+(L-4.2)+' '+(y+.2)+'q4.2 3.4 8.4 0"/><path d="M'+(Rr-4.2)+' '+(y+.2)+'q4.2 3.4 8.4 0"/></g>'+
+          '</g>'+
+          '<g fill="none" stroke="#272140" stroke-linecap="round" stroke-linejoin="round">'+
+            '<path class="tk-m-smile" d="M56.2 '+(68.2+fy)+'q3.8 3.2 7.6 0" stroke-width="2.2"/>'+
+            '<path class="tk-m-happy" d="M55 '+(67.4+fy)+'q5 6 10 0z" stroke-width="2" fill="#272140"/>'+
+            '<path class="tk-m-flat" d="M56.8 '+(69.2+fy)+'h6.4" stroke-width="2.2"/>'+
+          '</g>'+
+          '<ellipse class="tk-m-o" cx="60" cy="'+(69.4+fy)+'" rx="2.3" ry="2.8" fill="#272140"/>'+
+          '<g class="tk-m-yawn"><ellipse cx="60" cy="'+(70.5+fy)+'" rx="3.8" ry="5.4" fill="#272140"/><ellipse cx="60" cy="'+(73.4+fy)+'" rx="2.3" ry="1.6" fill="#F27E95"/></g>'+
+        '</g>'+
+      '</g></svg></div></div>'+
+      '<svg class="tuck-hands" viewBox="0 0 120 100" focusable="false">'+
+        '<ellipse cx="35" cy="93.2" rx="11" ry="2.4" fill="#272140" opacity=".08"/><ellipse cx="85" cy="93.2" rx="11" ry="2.4" fill="#272140" opacity=".08"/>'+
+        [0,50].map(dx => '<g class="tk-hand"><path d="M'+(23.5+dx)+' 89.6c0-5.6 5-9.3 11.5-9.3s11.5 3.7 11.5 9.3c0 2.6-2.1 3.9-4.6 3.9H'+(28.1+dx)+'c-2.5 0-4.6-1.3-4.6-3.9z" fill="'+k.hand+'"/><path d="M'+(31.4+dx)+' 88.4v3M'+(38.6+dx)+' 88.4v3" stroke="'+k.finger+'" stroke-width="1.4" stroke-linecap="round" opacity=".7"/></g>').join("")+
+      '</svg>';
+  }
+  const canAnim = el => !reduced() && el && typeof el.animate === "function";
+  function Critter(root, skin, mini){
+    root.innerHTML = rigSVG(skin, mini);
+    root.dataset.face = "open"; root.dataset.mouth = "smile";
+    this.root = root; this.up = !mini; this.ft = null;
+    this.hopEl = root.querySelector(".tuck-hop"); this.wob = root.querySelector(".tk-tuft-wob");
+    this.eyes = root.querySelector(".tk-eyes-open"); this.hands = Array.from(root.querySelectorAll(".tk-hand"));
+    this.yawnEl = root.querySelector(".tk-m-yawn"); this.hit = root.querySelector(".tk-hit");
+  }
+  Critter.prototype = {
+    look(x, y, t){ const s = this.root.style; s.setProperty("--lx", x.toFixed(2)); s.setProperty("--ly", y.toFixed(2)); s.setProperty("--tilt", (t||0).toFixed(2)); },
+    face(f, m, ms){
+      const r = this.root; r.dataset.face = f; r.dataset.mouth = m || "smile";
+      clearTimeout(this.ft);
+      if(ms) this.ft = setTimeout(() => { if(!r.classList.contains("is-asleep")){ r.dataset.face = "open"; r.dataset.mouth = "smile"; } }, ms);
+    },
+    blink(dbl){
+      if(this.root.dataset.face !== "open" || !canAnim(this.eyes)) return;
+      this.eyes.animate([{transform:"scaleY(1)"},{transform:"scaleY(.08)",offset:.45},{transform:"scaleY(1)"}], {duration:170, easing:"ease-in-out"});
+      if(dbl) setTimeout(() => this.blink(false), 260);
+    },
+    wobble(k){
+      if(!canAnim(this.wob)) return; k = k || 1;
+      this.wob.animate([{transform:"rotate(0)"},{transform:"rotate("+(-16*k)+"deg)",offset:.18},{transform:"rotate("+(11*k)+"deg)",offset:.4},{transform:"rotate("+(-6*k)+"deg)",offset:.62},{transform:"rotate("+(2.5*k)+"deg)",offset:.82},{transform:"rotate(0)"}], {duration:1000, easing:"ease-out"});
+    },
+    squeeze(){ this.hands.forEach(h => { if(canAnim(h)) h.animate([{transform:"scale(1,1)"},{transform:"scale(1.08,.86)",offset:.3},{transform:"scale(1,1)"}], {duration:420, easing:"ease-out"}); }); },
+    jump(h){
+      if(!canAnim(this.hopEl)) return; h = h || 12;
+      this.squeeze();
+      this.hopEl.animate([
+        {transform:"translateY(0) scale(1,1)"},
+        {transform:"translateY(3px) scale(1.05,.93)", offset:.18},
+        {transform:"translateY("+(-h)+"px) scale(.96,1.05)", offset:.46},
+        {transform:"translateY(1px) scale(1.03,.97)", offset:.72},
+        {transform:"translateY(0) scale(1,1)"}
+      ], {duration:560 + h*14, easing:"cubic-bezier(.3,.7,.4,1)"});
+      setTimeout(() => this.wobble(.8), 260);
+    },
+    nod(){ if(canAnim(this.hopEl)) this.hopEl.animate([{transform:"translateY(0) rotate(0)"},{transform:"translateY(3px) rotate(-2deg)",offset:.4},{transform:"translateY(0) rotate(0)"}], {duration:380, easing:"ease-in-out"}); },
+    squish(){
+      if(!canAnim(this.hopEl)) return;
+      this.hopEl.animate([{transform:"scale(1,1)"},{transform:"translateY(3px) scale(1.07,.9)",offset:.28},{transform:"scale(.98,1.03)",offset:.62},{transform:"scale(1,1)"}], {duration:520, easing:"ease-out"});
+      this.squeeze(); setTimeout(() => this.wobble(.8), 120);
+    },
+    yawn(){
+      this.face("sleep", "yawn", 1750);
+      if(canAnim(this.hopEl)) this.hopEl.animate([{transform:"translateY(0) scale(1,1)"},{transform:"translateY(-2px) scale(.97,1.07)",offset:.35},{transform:"translateY(-2px) scale(.965,1.08)",offset:.72},{transform:"translateY(0) scale(1,1)"}], {duration:1700, easing:"ease-in-out"});
+      if(canAnim(this.yawnEl)) this.yawnEl.animate([{transform:"scale(.15)"},{transform:"scale(1)",offset:.3},{transform:"scale(1.06,1.14)",offset:.72},{transform:"scale(.15)"}], {duration:1700, easing:"ease-in-out"});
+      setTimeout(() => this.blink(true), 1880);
+    },
+    rise(){ this.up = true; this.face("open"); this.look(0, 0, 0); this.root.classList.remove("is-down"); },
+    sink(){ this.up = false; this.root.classList.add("is-down"); setTimeout(() => { if(!this.up){ this.look(0,0,0); this.face("open"); } }, 760); }
+  };
+
+  const big = new Critter($("tuck"), SKINS.big, false);
+  const A = new Critter($("miniA"), SKINS.orange, true);   // sits next to Tuck
+  const B = new Critter($("miniB"), SKINS.red, true);      // a little further along
+  const root = big.root;
   const finePointer = window.matchMedia ? matchMedia("(hover: hover) and (pointer: fine)") : {matches:false};
   const R = (a, b) => a + Math.random()*(b-a);
   let timers = new Set(), onScreen = true, asleep = false, busyUntil = 0, noticeCooldown = 0, attending = false;
-  let lastActivity = Date.now(), lastPointer = null, restTimer = null, started = false, faceTimer = null;
+  let lastActivity = Date.now(), lastPointer = null, restTimer = null, started = false;
+  let sceneUntil = 0, lastScene = -1, scenesRun = 0;
 
   const later = (fn, ms) => { const t = setTimeout(() => { timers.delete(t); fn(); }, ms); timers.add(t); return t; };
   const stopAll = () => { timers.forEach(clearTimeout); timers.clear(); };
   const active = () => started && onScreen && document.visibilityState === "visible";
   const idle = () => Date.now() > busyUntil && !asleep;
+  const rest = () => attending ? big.look(-.35, .75, -1.2) : big.look(0, 0, 0);
+  function hold(ms){ const until = Date.now() + ms; busyUntil = until; later(() => { if(!asleep && busyUntil === until) rest(); }, ms); }
+  function bigGlance(x, y, t, ms){ if(!idle()) return false; big.look(x, y, t); hold(ms); return true; }
+  function minisDown(){ [A, B].forEach(m => { if(m.up) m.sink(); }); }
 
-  function look(x, y, tilt){
-    root.style.setProperty("--lx", x.toFixed(2)); root.style.setProperty("--ly", y.toFixed(2));
-    root.style.setProperty("--tilt", (tilt||0).toFixed(2));
-  }
-  const rest = () => attending ? look(-.35, .75, -1.2) : look(0, 0, 0);
-  function face(f, m, ms){
-    root.dataset.face = f; root.dataset.mouth = m || "smile";
-    clearTimeout(faceTimer);
-    if(ms) faceTimer = setTimeout(() => { if(!asleep){ root.dataset.face = "open"; root.dataset.mouth = "smile"; } }, ms);
-  }
-  function blink(double){
-    if(root.dataset.face !== "open" || reduced() || !eyesOpen.animate) return;
-    eyesOpen.animate([{transform:"scaleY(1)"},{transform:"scaleY(.08)",offset:.45},{transform:"scaleY(1)"}], {duration:170, easing:"ease-in-out"});
-    if(double) setTimeout(() => blink(false), 260);
-  }
-  function wobble(strength){
-    if(reduced() || !wob.animate) return;
-    const k = strength || 1;
-    wob.animate([{transform:"rotate(0)"},{transform:"rotate("+(-16*k)+"deg)",offset:.18},{transform:"rotate("+(11*k)+"deg)",offset:.4},{transform:"rotate("+(-6*k)+"deg)",offset:.62},{transform:"rotate("+(2.5*k)+"deg)",offset:.82},{transform:"rotate(0)"}], {duration:1000, easing:"ease-out"});
-  }
-  function squeeze(){
-    if(reduced()) return;
-    hands.forEach(h => h.animate && h.animate([{transform:"scale(1,1)"},{transform:"scale(1.08,.86)",offset:.3},{transform:"scale(1,1)"}], {duration:420, easing:"ease-out"}));
-  }
-
-  /* ambient life */
-  function scheduleBlink(){ later(() => { if(active() && !asleep) blink(Math.random() < .18); scheduleBlink(); }, R(2400, 6800)); }
+  /* ---------- Tuck's own ambient life ---------- */
+  function scheduleBlink(){ later(() => { if(active() && !asleep) big.blink(Math.random() < .18); [A,B].forEach(m => { if(m.up && Math.random() < .5) m.blink(false); }); scheduleBlink(); }, R(2400, 6800)); }
   function scheduleAmbient(){
     later(() => {
-      if(active() && idle() && !reduced()){
+      if(active() && idle() && !reduced() && Date.now() > sceneUntil){
         const wide = window.innerWidth >= 1080;
         const options = [
-          () => { look(wide ? -1 : -.4, wide ? .2 : .9, wide ? -2.5 : -1); hold(R(1100, 2200)); },
-          () => { look(.9, -.1, 2.2); hold(R(900, 1600)); },
-          () => { look(-.2, -.9, -1); hold(R(900, 1500)); blink(false); },
-          () => { look(0, 0, 4.5); hold(R(1400, 2200)); },
-          () => { blink(true); },
+          () => bigGlance(wide ? -1 : -.4, wide ? .2 : .9, wide ? -2.5 : -1, R(1100, 2200)),
+          () => bigGlance(.9, -.1, 2.2, R(900, 1600)),
+          () => { bigGlance(-.2, -.9, -1, R(900, 1500)); big.blink(false); },
+          () => bigGlance(0, 0, 4.5, R(1400, 2200)),
+          () => big.blink(true),
           () => {}
         ];
         options[Math.floor(Math.random()*options.length)]();
@@ -1805,27 +1895,116 @@ const Tuck = (function(){
       scheduleAmbient();
     }, R(9000, 19000));
   }
-  function hold(ms){ busyUntil = Date.now() + ms; later(() => { if(!asleep) rest(); }, ms); }
   function scheduleDozeCheck(){
     later(() => {
-      if(active() && !asleep && Date.now() - lastActivity > 85000 && !reduced()) sleep();
+      if(active() && !asleep && Date.now() - lastActivity > 85000 && !reduced() && Date.now() > sceneUntil) sleep();
       scheduleDozeCheck();
     }, 15000);
   }
   function sleep(){
-    asleep = true; root.classList.add("is-asleep");
-    face("open"); look(0, .5, -1.5);
-    later(() => { if(asleep){ root.dataset.face = "sleep"; root.style.setProperty("--sink", "12"); } }, 900);
+    asleep = true; minisDown();
+    big.look(0, .3, -1); big.yawn();
+    later(() => { if(!asleep) return; root.classList.add("is-asleep"); big.face("sleep"); big.look(0, .5, -1.5); root.style.setProperty("--sink", "12"); }, 1950);
   }
   function wake(){
     if(!asleep) return;
     asleep = false; root.classList.remove("is-asleep");
     root.style.setProperty("--sink", "0");
-    face("open"); rest(); busyUntil = Date.now() + 900;
-    later(() => blink(true), 380);
+    big.face("open"); rest(); busyUntil = Date.now() + 900;
+    later(() => big.blink(true), 380);
   }
 
-  /* gentle noticing: only a mouse, only when it has come to rest nearby, only now and then */
+  /* ---------- The minis: rare little scenes ---------- */
+  // Directions as seen from each creature: Tuck is to the right of A, B is to the left of A.
+  const SCENES = [
+    function hello(at){ // A pops up and says hi to Tuck
+      A.rise();
+      at(800, () => A.look(1, -.25, 3));
+      at(1150, () => { if(bigGlance(-1, .15, -3, 2300)) big.face("happy", "smile", 1300); });
+      at(1600, () => { A.face("happy", "happy", 1300); A.jump(8); });
+      at(3400, () => A.look(0, 0, 0));
+      at(3800, () => A.sink());
+      return 4600;
+    },
+    function contagiousYawn(at){ // one yawns, the other catches it, then Tuck does too
+      A.rise();
+      at(900, () => A.yawn());
+      at(1500, () => B.rise());
+      at(2200, () => B.look(1, 0, 3));
+      at(3000, () => { B.look(0, 0, 0); B.yawn(); });
+      at(3500, () => bigGlance(-1, .1, -2, 1100));
+      at(4700, () => { if(idle()){ busyUntil = Date.now() + 2100; big.look(0, 0, 0); big.yawn(); } });
+      at(6600, () => A.sink());
+      at(6900, () => B.sink());
+      return 7600;
+    },
+    function jumpers(at){ // both bounce, take turns, then look at each other
+      A.rise(); at(220, () => B.rise());
+      at(900, () => { A.face("happy", "happy", 2600); A.jump(16); });
+      at(1300, () => { B.face("happy", "happy", 2300); B.jump(16); });
+      at(1850, () => A.jump(10));
+      at(2200, () => B.jump(10));
+      at(2700, () => { A.look(-1, 0, -3); B.look(1, 0, 3); });
+      at(3400, () => { A.jump(7); B.jump(7); });
+      at(3600, () => bigGlance(-1, .2, -2, 1400));
+      at(4400, () => { A.look(0, 0, 0); B.look(0, 0, 0); });
+      at(4800, () => A.sink()); at(5000, () => B.sink());
+      return 5700;
+    },
+    function bump(at){ // A leans into B, B startles, they both giggle
+      A.rise(); B.rise();
+      at(800, () => { A.look(-1, 0, -2); B.look(1, 0, 2); });
+      at(1500, () => A.look(-1, .1, -8));
+      at(1750, () => { B.face("wide", "o", 650); B.jump(9); });
+      at(2450, () => { A.look(-.6, 0, -2); A.face("happy", "happy", 1500); B.face("happy", "happy", 1300); });
+      at(2700, () => { if(bigGlance(-1, .2, -2, 1500)) big.face("happy", "smile", 900); });
+      at(3900, () => { A.look(0, 0, 0); B.look(0, 0, 0); });
+      at(4300, () => B.sink()); at(4600, () => A.sink());
+      return 5300;
+    },
+    function shyPeek(at){ // B peeks, looks around, ducks back down
+      B.rise();
+      at(600, () => B.look(-.3, -.7, -1));
+      at(1300, () => B.look(1, -.2, 2));
+      at(1700, () => B.blink(true));
+      at(2300, () => B.sink());
+      return 3000;
+    },
+    function stretch(at){ // A pops up, yawns, and has a little hop to wake up
+      A.rise();
+      at(700, () => A.look(-.6, -.3, -2));
+      at(1400, () => { A.look(0, 0, 0); A.yawn(); });
+      at(3400, () => { A.face("happy", "smile", 900); A.jump(11); });
+      at(4500, () => A.sink());
+      return 5200;
+    }
+  ];
+  function runScene(i){
+    const t0 = Date.now();
+    lastScene = i; scenesRun++;
+    const dur = SCENES[i]((ms, fn) => later(fn, ms));
+    sceneUntil = t0 + dur;
+  }
+  function scheduleScenes(){
+    later(() => {
+      if(active() && !asleep && !reduced() && Date.now() > sceneUntil && Date.now() > busyUntil - 400){
+        let i = scenesRun === 0 ? 0 : Math.floor(Math.random()*SCENES.length);
+        if(i === lastScene) i = (i + 1 + Math.floor(Math.random()*(SCENES.length-1))) % SCENES.length;
+        runScene(i);
+      }
+      scheduleScenes();
+    }, scenesRun === 0 ? R(11000, 16000) : R(26000, 50000));
+  }
+  function miniCheer(){
+    if(reduced() || Date.now() < sceneUntil || Math.random() > .45) return;
+    const m = Math.random() < .5 ? A : B;
+    sceneUntil = Date.now() + 2400;
+    later(() => m.rise(), 250);
+    later(() => { m.face("happy", "happy", 1000); m.jump(12); }, 850);
+    later(() => m.sink(), 1900);
+  }
+
+  /* ---------- Noticing a resting cursor ---------- */
   function onRest(){
     if(!lastPointer || !active() || !idle() || reduced() || !finePointer.matches || Date.now() < noticeCooldown) return;
     const r = root.getBoundingClientRect();
@@ -1836,89 +2015,78 @@ const Tuck = (function(){
     later(() => {
       if(!idle()) return;
       const nx = dx/dist, ny = dy/dist;
-      look(nx, ny*.85, nx*3);
-      if(Math.random() < .5) later(() => blink(false), 520);
+      big.look(nx, ny*.85, nx*3);
+      if(Math.random() < .5) later(() => big.blink(false), 520);
       hold(R(1300, 2500));
     }, R(260, 560));
   }
   function activity(){ lastActivity = Date.now(); if(asleep) wake(); }
 
-  /* reactions */
+  /* ---------- Reactions to what the person does ---------- */
   function react(kind){
     if(!started) return;
     activity();
-    const motion = !reduced() && hop.animate;
+    const motion = !reduced();
     if(kind === "save"){
       busyUntil = Date.now() + 1400;
-      face("happy", "happy", 1200); look(0, -.2, 0);
-      if(motion){
-        squeeze();
-        hop.animate([
-          {transform:"translateY(0) scale(1,1)"},
-          {transform:"translateY(3px) scale(1.05,.93)", offset:.18},
-          {transform:"translateY(-14px) scale(.96,1.05)", offset:.46},
-          {transform:"translateY(1px) scale(1.03,.97)", offset:.72},
-          {transform:"translateY(0) scale(1,1)"}
-        ], {duration:780, easing:"cubic-bezier(.3,.7,.4,1)"});
-        setTimeout(() => wobble(1), 300);
-      }
+      big.face("happy", "happy", 1200); big.look(0, -.2, 0);
+      if(motion) big.jump(14);
       later(rest, 1300);
+      miniCheer();
     }else if(kind === "copy"){
       busyUntil = Date.now() + 700;
-      face("happy", "smile", 650);
-      if(motion) hop.animate([{transform:"translateY(0) rotate(0)"},{transform:"translateY(3px) rotate(-2deg)",offset:.4},{transform:"translateY(0) rotate(0)"}], {duration:380, easing:"ease-in-out"});
-      if(motion) setTimeout(() => wobble(.5), 120);
+      big.face("happy", "smile", 650);
+      if(motion){ big.nod(); setTimeout(() => big.wobble(.5), 120); }
     }else if(kind === "delete"){
       busyUntil = Date.now() + 1500;
-      face("open", "flat", 1400); look(-.3, 1, -2);
+      big.face("open", "flat", 1400); big.look(-.3, 1, -2);
       root.style.setProperty("--sink", "5");
       later(() => { if(!asleep){ root.style.setProperty("--sink", "0"); rest(); } }, 1400);
     }else if(kind === "undo"){
       busyUntil = Date.now() + 900;
       root.style.setProperty("--sink", "0");
-      face("happy", "smile", 800); rest();
-      if(motion) hop.animate([{transform:"translateY(0)"},{transform:"translateY(-7px)",offset:.4},{transform:"translateY(0)"}], {duration:420, easing:"cubic-bezier(.3,.7,.4,1)"});
-      if(motion) setTimeout(() => wobble(.6), 160);
+      big.face("happy", "smile", 800); rest();
+      if(motion) big.jump(7);
     }else if(kind === "paste"){
       if(!idle()) return;
       busyUntil = Date.now() + 1300;
-      face("wide", "o", 750); look(-.3, .8, -1);
-      later(() => { face("happy", "smile", 500); if(motion) hop.animate([{transform:"translateY(0)"},{transform:"translateY(2px)",offset:.5},{transform:"translateY(0)"}], {duration:300}); }, 760);
+      big.face("wide", "o", 750); big.look(-.3, .8, -1);
+      later(() => { big.face("happy", "smile", 500); if(motion) big.nod(); }, 760);
       later(rest, 1300);
-    }else if(kind === "boop"){
-      busyUntil = Date.now() + 800;
-      face("happy", "smile", 700);
-      if(motion){
-        hop.animate([{transform:"scale(1,1)"},{transform:"translateY(3px) scale(1.07,.9)",offset:.28},{transform:"scale(.98,1.03)",offset:.62},{transform:"scale(1,1)"}], {duration:520, easing:"ease-out"});
-        squeeze(); setTimeout(() => wobble(.8), 120);
-      }
     }
   }
   function attend(on){
     attending = on; activity();
     if(!started || !idle() || reduced()) return;
-    if(on){ later(() => { if(attending && idle()){ look(-.35, .85, -1.5); hold(R(1400, 2200)); } }, 280); }
+    if(on) later(() => { if(attending && idle()){ big.look(-.35, .85, -1.5); hold(R(1400, 2200)); } }, 280);
     else rest();
   }
 
   function enter(){
     started = true;
-    if(reduced()){ root.classList.remove("is-hidden"); return; }
     root.classList.remove("is-hidden");
-    later(() => { look(-.7, .2, -1.5); }, 980);
-    later(() => blink(false), 1500);
-    later(() => { rest(); }, 2600);
+    if(reduced()) return;
+    later(() => big.look(-.7, .2, -1.5), 980);
+    later(() => big.blink(false), 1500);
+    later(rest, 2600);
     busyUntil = Date.now() + 2700;
   }
-  function start(){
-    scheduleBlink(); scheduleAmbient(); scheduleDozeCheck();
-  }
+  function start(){ scheduleBlink(); scheduleAmbient(); scheduleDozeCheck(); scheduleScenes(); }
   function setPaused(p){
-    root.classList.toggle("is-paused", p);
-    if(p) stopAll(); else if(started){ stopAll(); start(); }
+    [big, A, B].forEach(c => c.root.classList.toggle("is-paused", p));
+    if(p){ stopAll(); minisDown(); sceneUntil = 0; }
+    else if(started){ stopAll(); start(); }
   }
 
-  root.querySelector(".tk-hit").addEventListener("click", () => react("boop"));
+  big.hit.addEventListener("click", () => {
+    if(!started) return; activity();
+    busyUntil = Date.now() + 800; big.face("happy", "smile", 700); big.squish();
+  });
+  [A, B].forEach(m => m.hit.addEventListener("click", () => {
+    if(!m.up) return;
+    m.face("happy", "happy", 600); m.squish();
+    later(() => m.sink(), 650);
+  }));
   ["pointerdown","keydown","wheel","touchstart"].forEach(t => document.addEventListener(t, activity, {passive:true}));
   document.addEventListener("pointermove", e => {
     if(e.pointerType && e.pointerType !== "mouse") return;
@@ -1930,13 +2098,17 @@ const Tuck = (function(){
   if("IntersectionObserver" in window){
     new IntersectionObserver(entries => { onScreen = entries[0].isIntersecting; setPaused(!onScreen || document.visibilityState !== "visible"); }).observe(root);
   }
-  if(reduceMQ.addEventListener) reduceMQ.addEventListener("change", () => { rest(); root.style.setProperty("--sink","0"); asleep = false; root.classList.remove("is-asleep"); face("open"); });
+  if(reduceMQ.addEventListener) reduceMQ.addEventListener("change", () => {
+    minisDown(); rest(); root.style.setProperty("--sink","0"); asleep = false; root.classList.remove("is-asleep"); big.face("open");
+  });
 
   return {
     init(){ later(() => { enter(); start(); }, reduced() ? 0 : 450); },
-    react, attend
+    react, attend,
+    _scene: i => runScene(i)   // used by the test suite
   };
 })();
+
 
 /* ---------- Boot ---------- */
 paintIcons();
@@ -1954,9 +2126,9 @@ if(draft && typeof draft === "object"){
 }
 if(!window.matchMedia || !matchMedia("(hover: hover)").matches) $("kbdHint").hidden = true;
 Tuck.init();
+window.__procapTuck = Tuck; // lets the test suite play a scene on demand
 if(composerHasText()) $("composer").classList.add("is-open");
-updateSticky();
-window.addEventListener("resize", () => { updateSticky(); if(!S.data.prompts.length) renderLibrary(); }, {passive:true});
+window.addEventListener("resize", () => { if(!S.data.prompts.length) renderLibrary(); }, {passive:true});
 })();
 </script>
 </body>
