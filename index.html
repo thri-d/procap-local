@@ -45,45 +45,33 @@ h1,h2,h3,p{overflow-wrap:break-word}
 .eyebrow{display:inline-flex;align-items:center;gap:9px;font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin-bottom:17px}
 .eyebrow-dot{width:8px;height:8px;background:#b8a7f1;border-radius:50%;box-shadow:0 0 0 4px #eee8fc}
 .hero h1{font-size:clamp(43px,5.35vw,70px);line-height:1.085;font-weight:600;letter-spacing:-.045em;margin:0;max-width:13ch}
-.hero h1 em{font-style:italic;color:var(--accent)}
+.hero h1 .accent{font-style:normal;color:var(--accent)}
 .hero p.sub{font-size:17px;line-height:1.7;color:var(--muted);max-width:44ch;margin:21px 0 0}
 .hero-tags{display:flex;gap:10px;flex-wrap:wrap;margin-top:25px}
 .hero-tag{display:inline-flex;align-items:center;gap:8px;padding:9px 12px;background:rgba(255,255,255,.7);border:1px solid #e8e2ec;border-radius:999px;color:var(--muted);font-size:12px;font-weight:600}
 .tag-spark{font-size:16px;color:var(--accent)}
 .hero-side{position:relative;min-width:0;min-height:340px;display:flex;justify-content:center;align-items:center}
-.mascot-stage{--eye-x:0px;--eye-y:0px;--shift-x:0px;--shift-y:0px;position:relative;width:min(100%,440px);height:332px;border-radius:46% 54% 48% 52% / 55% 43% 57% 45%;background:
- radial-gradient(circle at 26% 34%,rgba(255,255,255,.9) 0 5px,transparent 6px),
- radial-gradient(circle at 65% 71%,rgba(255,255,255,.9) 0 3px,transparent 4px),
- linear-gradient(145deg,#eae5ff,#f9e8ee 62%,#fff0db);
- box-shadow:inset 0 0 0 1px rgba(255,255,255,.85),0 20px 65px rgba(127,104,179,.09);
- display:flex;justify-content:center;align-items:center;cursor:pointer;isolation:isolate;transition:box-shadow .25s}
-.mascot-stage:hover{box-shadow:inset 0 0 0 1px #fff,0 28px 75px rgba(127,104,179,.16)}
-.stage-halo{position:absolute;inset:20px 28px;border:1px dashed rgba(133,116,190,.17);border-radius:50%;transform:rotate(-17deg);pointer-events:none}
-.mascot-float{position:absolute;display:block;animation:drift 4s ease-in-out infinite}
-.mascot-core{width:175px;height:184px;z-index:3;top:60px;left:50%;margin-left:-87px;transform:translate(var(--shift-x),var(--shift-y));transition:transform .15s ease-out}
-.mascot-core .mascot-float{width:100%;height:100%}
-.mascot-core svg,.friend svg{display:block;width:100%;height:100%;filter:drop-shadow(0 15px 8px rgba(92,81,137,.12))}
-.friend{position:absolute;z-index:2;width:100px;height:112px;transition:transform .2s ease-out}
-.friend .mascot-float{width:100%;height:100%}
-.friend-left{left:38px;bottom:70px;transform:rotate(-10deg)}
-.friend-left .mascot-float{animation-delay:-1.4s}
-.friend-right{right:29px;bottom:73px;transform:rotate(9deg)}
-.friend-right .mascot-float{animation-delay:-2.4s}
-.mascot-stage:hover .friend-left{transform:rotate(-17deg) translateY(-4px)}
-.mascot-stage:hover .friend-right{transform:rotate(14deg) translateY(-6px)}
-.look{transform:translate(var(--eye-x),var(--eye-y));transition:transform .11s linear}
-.eyelids{transform-origin:center;animation:blink 5.1s infinite}
-.friend-left .eyelids{animation-delay:-1.9s}.friend-right .eyelids{animation-delay:-3.25s}
-@keyframes blink{0%,91%,96%,100%{transform:scaleY(1)}93%{transform:scaleY(.13)}}
-@keyframes drift{0%,100%{transform:translateY(0) rotate(-2deg)}50%{transform:translateY(-9px) rotate(2deg)}}
-.float-dot{position:absolute;width:9px;height:9px;border-radius:50%;background:var(--blush);animation:drift 3.3s ease-in-out infinite}
-.float-dot.one{left:28%;top:11%;width:12px;height:12px;background:var(--butter)}
-.float-dot.two{right:24%;top:19%;background:var(--mint);animation-delay:-1s}
-.float-dot.three{left:15%;top:51%;background:#c0b5f7;animation-delay:-1.7s}
-.float-dot.four{right:13%;bottom:24%;width:6px;height:6px;background:#e7adc7;animation-delay:-.5s}
-.mood-bubble{position:absolute;right:13px;top:20px;max-width:152px;min-height:35px;background:#fff;border:1px solid #eae4f3;box-shadow:0 8px 22px rgba(96,81,150,.1);padding:9px 12px;border-radius:17px 17px 17px 5px;z-index:5;color:var(--accent-dark);font-size:12px;font-weight:600;text-align:center;transition:transform .2s,opacity .2s;pointer-events:none}
-.mascot-stage.is-happy .mood-bubble{transform:translateY(-5px)}
-.mascot-cap{position:absolute;bottom:10px;text-align:center;width:100%;font-size:12px;font-weight:600;color:var(--muted)}
+/* A quiet paper-stack illustration: decorative, not interactive. */
+.idea-scene{position:relative;width:min(100%,440px);height:338px;isolation:isolate;display:grid;place-items:center;
+  background:radial-gradient(ellipse at 48% 47%,rgba(213,204,246,.51),rgba(245,232,241,.34) 54%,transparent 75%)}
+.idea-scene::before{content:"";position:absolute;width:324px;height:324px;max-width:92%;border:1px solid rgba(128,109,185,.16);border-radius:50%;inset:8px auto auto 50%;transform:translateX(-50%);pointer-events:none}
+.idea-scene::after{content:"";position:absolute;left:28px;top:33px;width:8px;height:8px;border-radius:50%;background:#b7adee;box-shadow:334px 240px 0 -1px #e9c49f;pointer-events:none}
+.idea-card{position:absolute;width:262px;height:248px;border:1px solid rgba(131,120,169,.17);border-radius:20px;box-shadow:0 18px 40px rgba(78,62,128,.09);pointer-events:none}
+.idea-card-back{transform:translate(28px,-8px) rotate(13deg);background:#e9e5fa}
+.idea-card-middle{transform:translate(-23px,6px) rotate(-10deg);background:#f9e8ed}
+.idea-card-front{z-index:2;display:flex;flex-direction:column;align-items:stretch;padding:23px 24px 20px;background:rgba(255,255,255,.95);transform:rotate(-2deg);box-shadow:0 25px 55px rgba(80,62,122,.13);transition:transform .6s cubic-bezier(.2,.8,.2,1),box-shadow .6s ease}
+.idea-scene:hover .idea-card-front{transform:rotate(0deg) translateY(-3px);box-shadow:0 29px 60px rgba(80,62,122,.15)}
+.idea-card-top{display:flex;align-items:center;justify-content:space-between;color:var(--faint);font-family:'Outfit',sans-serif;font-size:10px;font-weight:700;letter-spacing:.13em}
+.idea-symbol{width:32px;height:32px;border-radius:11px;background:#efeaff;color:var(--accent);display:grid;place-items:center;font-size:17px;letter-spacing:0}
+.idea-card-title{font:600 27px/1.16 'Fraunces',Georgia,serif;letter-spacing:-.035em;color:var(--ink);margin-top:21px;max-width:11ch}
+.idea-card-line{height:7px;border-radius:99px;background:#e9e7f0;margin-top:10px;width:88%}
+.idea-card-line.short{width:55%}.idea-card-line.medium{width:73%}
+.idea-card-footer{margin-top:auto;display:flex;align-items:center;justify-content:space-between;border-top:1px solid #eeebf4;padding-top:15px}
+.idea-filed{display:inline-flex;align-items:center;gap:7px;color:#51695d;background:#eaf6f0;border:1px solid #d9eee2;padding:6px 10px;border-radius:99px;font-size:11px;font-weight:650}
+.idea-filed::before{content:"";width:6px;height:6px;background:#72b58c;border-radius:50%}
+.idea-counter{font-size:10px;font-weight:650;color:var(--faint);letter-spacing:.09em}
+.idea-caption{position:absolute;bottom:0;left:0;right:0;text-align:center;font-size:11px;letter-spacing:.15em;text-transform:uppercase;color:#817a9b;font-weight:700}
+@media(prefers-reduced-motion:reduce){.idea-card-front{transition:none}}
 .card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow)}
 .capture{padding:30px 32px 32px;margin-bottom:72px;position:relative;overflow:hidden}
 .capture::before{content:'';position:absolute;top:0;left:30px;right:30px;height:3px;background:linear-gradient(90deg,#a59be4,#e5abd0,#f0d7a6);border-radius:0 0 10px 10px}
@@ -189,63 +177,46 @@ textarea{resize:vertical;min-height:140px;line-height:1.65}.capture textarea{min
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 .hidden{display:none!important}
 .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
-@media(max-width:900px){.hero{gap:16px;grid-template-columns:minmax(0,1fr) 345px}.mascot-stage{height:295px}.hero-side{min-height:300px}.mascot-core{top:44px}.friend-left{left:23px;bottom:60px}.friend-right{right:17px;bottom:60px}.brand{margin-bottom:34px}}
-@media(max-width:730px){.wrap{padding:20px 18px 100px}.hero{grid-template-columns:minmax(0,1fr);gap:8px;margin-bottom:28px}.hero h1{max-width:18ch}.hero-side{min-height:268px}.mascot-stage{max-width:420px;height:262px}.mascot-core{top:26px}.friend-left,.friend-right{bottom:38px}.mascot-cap{bottom:5px}.grid2{grid-template-columns:minmax(0,1fr)}.capture{padding:24px;margin-bottom:55px}.lib-head{align-items:center}.lib-head h2{max-width:20ch}.toolbar .search{flex-basis:100%}.sort-wrap{flex:1}.backup-actions{flex:1;justify-content:flex-end}}
-@media(max-width:470px){.brand{margin-bottom:22px}.brand .word{font-size:24px}.brand-note{display:none}.navlink{padding:8px 10px;font-size:12px}.navlink:not(.navlink-outline){display:none}.hero h1{font-size:clamp(38px,10vw,52px)}.hero p.sub{font-size:15px;margin-top:16px}.hero-tags{margin-top:18px}.hero-tag{font-size:11px}.hero-side{min-height:246px}.mascot-stage{height:239px}.mascot-core{top:23px;width:152px;height:160px;margin-left:-76px}.friend{width:83px;height:98px}.friend-left{left:18px;bottom:30px}.friend-right{right:15px;bottom:30px}.mood-bubble{font-size:11px;right:7px;top:10px;max-width:126px}.capture{padding:20px 18px 23px}.capture-head{align-items:start}.capture h2,.vault h2{font-size:23px}.row{align-items:stretch}.row>.btn{width:100%}.toggle-text span{max-width:26ch}.lib-head{align-items:start;gap:8px;flex-wrap:wrap}.lib-head h2{font-size:32px}.lib-count{padding:8px 12px}.backup-actions .btn{flex:1;min-width:0}.sort-wrap{flex:1 1 100%;max-width:none}.toolbar{gap:9px}.search-hint{display:none}.vault{padding:22px 18px}.modal{padding:23px 18px}.modal .mrow .btn{flex:1}.subject-item{gap:6px;padding:8px}.subject-item .mini{min-width:53px;padding:7px 8px}}
-@media(max-width:340px){.wrap{padding-inline:12px}.capture{padding-inline:15px}.vault{padding-inline:15px}.brand-left{gap:8px}.hero-tags{gap:5px}.hero-tag{font-size:10px}.pcard{padding:16px}.pcard .actions{grid-template-columns:repeat(2,minmax(0,1fr))}.mini{font-size:12px}.subject-add{flex-wrap:wrap}.subject-add input,.subject-add button{width:100%}.subject-item{flex-wrap:wrap}.subject-name{flex-basis:calc(100% - 25px)}}
+@media(max-width:900px){.hero{gap:16px;grid-template-columns:minmax(0,1fr) 345px}.idea-scene{height:304px}.hero-side{min-height:304px}.brand{margin-bottom:34px}}
+@media(max-width:730px){.wrap{padding:20px 18px 100px}.hero{grid-template-columns:minmax(0,1fr);gap:8px;margin-bottom:28px}.hero h1{max-width:18ch}.hero-side{min-height:285px}.idea-scene{max-width:420px;height:282px}.grid2{grid-template-columns:minmax(0,1fr)}.capture{padding:24px;margin-bottom:55px}.lib-head{align-items:center}.lib-head h2{max-width:20ch}.toolbar .search{flex-basis:100%}.sort-wrap{flex:1}.backup-actions{flex:1;justify-content:flex-end}}
+@media(max-width:470px){.brand{margin-bottom:22px}.brand .word{font-size:24px}.brand-note{display:none}.navlink{padding:8px 10px;font-size:12px}.navlink:not(.navlink-outline){display:none}.hero h1{font-size:clamp(38px,10vw,52px)}.hero p.sub{font-size:15px;margin-top:16px}.hero-tags{margin-top:18px}.hero-tag{font-size:11px}.hero-side{min-height:265px}.idea-scene{height:263px}.idea-scene::before{width:255px;height:255px}.idea-card{width:206px;height:205px;border-radius:16px}.idea-card-front{padding:17px 18px}.idea-card-title{font-size:22px;margin-top:15px}.idea-card-line{height:6px;margin-top:8px}.idea-card-footer{padding-top:10px}.idea-caption{font-size:10px}.capture{padding:20px 18px 23px}.capture-head{align-items:start}.capture h2,.vault h2{font-size:23px}.row{align-items:stretch}.row>.btn{width:100%}.toggle-text span{max-width:26ch}.lib-head{align-items:start;gap:8px;flex-wrap:wrap}.lib-head h2{font-size:32px}.lib-count{padding:8px 12px}.backup-actions .btn{flex:1;min-width:0}.sort-wrap{flex:1 1 100%;max-width:none}.toolbar{gap:9px}.search-hint{display:none}.vault{padding:22px 18px}.modal{padding:23px 18px}.modal .mrow .btn{flex:1}.subject-item{gap:6px;padding:8px}.subject-item .mini{min-width:53px;padding:7px 8px}}
+@media(max-width:340px){.wrap{padding-inline:12px}.capture{padding-inline:15px}.vault{padding-inline:15px}.brand-left{gap:8px}.hero-tags{gap:5px}.hero-tag{font-size:10px}.pcard{padding:16px}.pcard .actions{grid-template-columns:repeat(2,minmax(0,1fr))}.mini{font-size:12px}.subject-add{flex-wrap:wrap}.subject-add input,.subject-add button{width:100%}.subject-item{flex-wrap:wrap}.subject-name{flex-basis:calc(100% - 25px)}.idea-card-back{transform:translate(15px,-7px) rotate(11deg)}.idea-card-middle{transform:translate(-12px,5px) rotate(-8deg)}}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important;scroll-behavior:auto!important}}
 </style>
 </head>
 <body>
 <div class="wrap" id="app">
   <header class="brand">
-    <a class="brand-left" href="#app" aria-label="ProCap Local home"><span class="brand-mark" aria-hidden="true">✳</span><span class="word">Pro<em>Cap</em></span><span class="brand-note">Your prompt nook</span></a>
+    <a class="brand-left" href="#app" aria-label="ProCap Local home"><span class="brand-mark" aria-hidden="true">✳</span><span class="word">Pro<em>Cap</em></span><span class="brand-note">Personal prompt library</span></a>
     <nav class="topnav" aria-label="Page navigation"><a class="navlink" href="#library">My library</a><a class="navlink navlink-outline" href="#captureCard">+ New prompt</a></nav>
   </header>
 
   <section class="hero" aria-labelledby="heroTitle">
     <div>
-      <span class="eyebrow"><span class="eyebrow-dot"></span> A little space for big ideas</span>
-      <h1 id="heroTitle">Good ideas deserve a <em>little home.</em></h1>
-      <p class="sub">Keep your most useful AI prompts together. Save them once, find them in seconds, and copy them whenever inspiration calls.</p>
+      <span class="eyebrow"><span class="eyebrow-dot"></span> A personal library for your prompts</span>
+      <h1 id="heroTitle">Good ideas deserve a <span class="accent">little home.</span></h1>
+      <p class="sub">Keep useful AI prompts organized in one place. Save what works, find it quickly, and copy it whenever you need it.</p>
       <div class="hero-tags"><span class="hero-tag"><span class="tag-spark" aria-hidden="true">✳</span> Saved in this browser</span><span class="hero-tag"><span class="tag-spark" aria-hidden="true">♡</span> No account needed</span></div>
     </div>
     <div class="hero-side">
-      <div class="mascot-stage" id="mascotStage" tabindex="0" role="button" aria-label="Meet Milo and friends. Move your cursor here or tap to say hello">
-        <span class="stage-halo" aria-hidden="true"></span><span class="float-dot one" aria-hidden="true"></span><span class="float-dot two" aria-hidden="true"></span><span class="float-dot three" aria-hidden="true"></span><span class="float-dot four" aria-hidden="true"></span>
-        <span class="mood-bubble" id="mascotMood" aria-live="polite">Psst… say hi! ✦</span>
-        <div class="friend friend-left" aria-hidden="true"><div class="mascot-float">
-          <svg viewBox="0 0 100 115" xmlns="http://www.w3.org/2000/svg">
-            <path d="M45 26 Q37 15 40 8 Q56 10 56 27" fill="#9cbf9c" stroke="#83a783" stroke-width="2"/><path d="M55 25 Q58 13 70 12 Q70 26 56 30" fill="#b2d3a8" stroke="#83a783" stroke-width="2"/>
-            <path d="M11 65 C10 38 26 28 51 30 C77 29 90 48 88 70 C87 94 71 106 49 105 C26 105 12 89 11 65Z" fill="#ffe5b6" stroke="#edc98e" stroke-width="2"/>
-            <ellipse cx="31" cy="77" rx="8" ry="5" fill="#f8b4af" opacity=".6"/><ellipse cx="71" cy="77" rx="8" ry="5" fill="#f8b4af" opacity=".6"/>
-            <g class="eyelids"><g class="look"><circle cx="38" cy="67" r="3.5" fill="#4a4453"/><circle cx="64" cy="67" r="3.5" fill="#4a4453"/></g></g>
-            <path d="M45 79 Q51 85 57 79" stroke="#6a5962" stroke-width="2.6" stroke-linecap="round" fill="none"/>
-          </svg>
-        </div></div>
-        <div class="mascot-core" aria-hidden="true"><div class="mascot-float"><svg viewBox="0 0 180 190" xmlns="http://www.w3.org/2000/svg">
-          <path d="M36 65 C30 36 57 22 82 29 C104 15 131 29 138 51 C161 67 165 104 149 128 C151 153 123 172 90 172 C56 172 27 157 27 131 C10 109 16 78 36 65Z" fill="#d7cdf9" stroke="#b6a8e9" stroke-width="2.6"/>
-          <path d="M42 60 C40 40 61 31 80 34" fill="none" stroke="#fff" stroke-width="7" opacity=".42" stroke-linecap="round"/>
-          <ellipse cx="49" cy="107" rx="11" ry="7" fill="#f4a8c7" opacity=".6"/><ellipse cx="129" cy="107" rx="11" ry="7" fill="#f4a8c7" opacity=".6"/>
-          <g class="eyelids"><g class="look"><ellipse cx="65" cy="93" rx="6.2" ry="7.2" fill="#38364d"/><ellipse cx="113" cy="93" rx="6.2" ry="7.2" fill="#38364d"/><circle cx="67" cy="90" r="2" fill="#fff"/><circle cx="115" cy="90" r="2" fill="#fff"/></g></g>
-          <path d="M76 114 Q89 127 102 114" fill="none" stroke="#4a435e" stroke-width="4" stroke-linecap="round" class="main-mouth"/>
-          <path d="M47 147 Q36 154 31 150" stroke="#b6a8e9" stroke-width="5" stroke-linecap="round" fill="none"/>
-          <path d="M132 146 Q145 153 151 145" stroke="#b6a8e9" stroke-width="5" stroke-linecap="round" fill="none"/>
-        </svg></div></div>
-        <div class="friend friend-right" aria-hidden="true"><div class="mascot-float"><svg viewBox="0 0 100 115" xmlns="http://www.w3.org/2000/svg">
-          <path d="M24 45 Q17 21 27 10 Q47 17 44 36" fill="#ffd4da" stroke="#e8a9b8" stroke-width="2"/><path d="M60 36 Q68 14 83 12 Q88 28 74 50" fill="#ffd4da" stroke="#e8a9b8" stroke-width="2"/>
-          <path d="M10 70 C8 45 25 34 50 33 C77 34 91 49 90 73 C88 96 73 106 50 106 C24 105 11 91 10 70Z" fill="#ffd4dd" stroke="#eaa9b6" stroke-width="2"/>
-          <ellipse cx="30" cy="79" rx="8" ry="5" fill="#ee93a4" opacity=".49"/><ellipse cx="72" cy="79" rx="8" ry="5" fill="#ee93a4" opacity=".49"/>
-          <g class="eyelids"><g class="look"><circle cx="38" cy="68" r="3.7" fill="#4a4453"/><circle cx="64" cy="68" r="3.7" fill="#4a4453"/></g></g>
-          <path d="M44 81 Q51 87 58 81" stroke="#735667" stroke-width="2.6" fill="none" stroke-linecap="round"/>
-        </svg></div></div>
-        <span class="mascot-cap">Meet Milo, Pip & Momo · they follow your cursor ♡</span>
+      <div class="idea-scene" aria-hidden="true">
+        <div class="idea-card idea-card-back"></div>
+        <div class="idea-card idea-card-middle"></div>
+        <div class="idea-card idea-card-front">
+          <div class="idea-card-top"><span>PROMPT / 001</span><span class="idea-symbol">✳</span></div>
+          <div class="idea-card-title">A thought worth keeping.</div>
+          <div class="idea-card-line"></div>
+          <div class="idea-card-line medium"></div>
+          <div class="idea-card-line short"></div>
+          <div class="idea-card-footer"><span class="idea-filed">Saved for later</span><span class="idea-counter">01 / 03</span></div>
+        </div>
+        <div class="idea-caption">Collect &nbsp;·&nbsp; Organize &nbsp;·&nbsp; Reuse</div>
       </div>
     </div>
   </section>
 
   <section class="card capture" id="captureCard" aria-labelledby="captureTitle">
-    <div class="capture-head"><span class="section-symbol" aria-hidden="true">✦</span><div><h2 id="captureTitle">Save a new prompt</h2><p class="hint">Just three little steps. Your ideas stay right here.</p></div></div>
+    <div class="capture-head"><span class="section-symbol" aria-hidden="true">✦</span><div><h2 id="captureTitle">Save a new prompt</h2><p class="hint">Name it, choose a subject, and keep it ready to reuse.</p></div></div>
     <div class="grid2">
       <div><label class="f" for="fTitle">01 · Give it a name</label><input type="text" id="fTitle" placeholder="e.g. Write a friendly email" maxlength="120" autocomplete="off"></div>
       <div><label class="f" for="fSubject">02 · Choose a subject</label><div class="select-shell"><select id="fSubject"></select></div><div class="field-help"><span>Make organizing easy</span><button type="button" class="text-link" id="subjectShortcut">Edit subjects</button></div></div>
@@ -253,12 +224,12 @@ textarea{resize:vertical;min-height:140px;line-height:1.65}.capture textarea{min
     <div><label class="f" for="fBody">03 · Add your prompt</label><textarea id="fBody" placeholder="Write or paste the words you'll want to reuse..."></textarea></div>
     <div class="row">
       <div class="toggle-wrap"><label class="switch" aria-label="Keep prompt private"><input type="checkbox" id="fPrivate"><span class="slider"></span></label><div class="toggle-text"><b>Keep private</b><span>Hide it from your main library (not encrypted)</span></div></div>
-      <button class="btn btn-primary" id="saveBtn"><span aria-hidden="true">✦</span> Save my prompt</button>
+      <button class="btn btn-primary" id="saveBtn"><span aria-hidden="true">✦</span> Save prompt</button>
     </div>
   </section>
 
   <section id="library" aria-labelledby="libraryTitle">
-    <div class="lib-head"><div><span class="eyebrow"><span class="eyebrow-dot"></span> Your collection</span><h2 id="libraryTitle">Your favorite ideas, <em>within reach.</em></h2></div><div class="lib-count"><strong id="promptCount">0</strong> <span id="promptCountLabel">prompts</span></div></div>
+    <div class="lib-head"><div><span class="eyebrow"><span class="eyebrow-dot"></span> Your collection</span><h2 id="libraryTitle">Your prompts, within reach.</h2></div><div class="lib-count"><strong id="promptCount">0</strong> <span id="promptCountLabel">prompts</span></div></div>
     <div class="toolbar">
       <div class="search"><span class="icon" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 5 5"/></svg></span><input type="text" id="search" placeholder="Search your prompts..." aria-label="Search prompts"><span class="search-hint" aria-hidden="true">⌘ / Ctrl K</span></div>
       <div class="select-shell sort-wrap"><label class="sr-only" for="sortSel">Sort prompts</label><select id="sortSel"><option value="new">Newest first</option><option value="old">Oldest first</option><option value="az">Name: A to Z</option></select></div>
@@ -267,15 +238,15 @@ textarea{resize:vertical;min-height:140px;line-height:1.65}.capture textarea{min
     </div>
     <div class="chips" id="chips" aria-label="Filter prompts by subject"></div>
     <div class="cards" id="cards"></div>
-    <div class="card empty hidden" id="emptyLib"><div class="empty-symbol" aria-hidden="true">✧</div><div class="big">A blank page, full of possibility.</div><div>Save your first prompt above, or try a different search or filter.</div></div>
+    <div class="card empty hidden" id="emptyLib"><div class="empty-symbol" aria-hidden="true">✧</div><div class="big">Your library starts here.</div><div>Save your first prompt above, or try a different search or filter.</div></div>
   </section>
 
   <section class="card vault" id="vaultSection" aria-labelledby="privateTitle">
-    <div class="vault-head"><span class="vault-icon" aria-hidden="true">♧</span><div><h2 id="privateTitle">Your quiet corner</h2><p class="hint">Private prompts are hidden from your main library until you choose to show them. They are not password-protected or encrypted.</p></div></div>
+    <div class="vault-head"><span class="vault-icon" aria-hidden="true">♧</span><div><h2 id="privateTitle">Private prompts</h2><p class="hint">Private prompts are hidden from your main library until you choose to show them. They are not password-protected or encrypted.</p></div></div>
     <div class="lockbox"><button class="btn btn-secondary" id="privateToggle" aria-expanded="false" aria-controls="vaultCards">Show private prompts</button><span class="lib-count" id="privateCount">0 hidden</span></div>
     <div id="vaultCards" class="cards hidden"></div>
   </section>
-  <p class="footnote"><span class="footnote-symbol" aria-hidden="true">✳</span><span>A friendly reminder: your prompts live in this browser only. Export a JSON backup every so often so you can restore them if your browser data gets cleared.</span></p>
+  <p class="footnote"><span class="footnote-symbol" aria-hidden="true">✳</span><span>Your prompts are saved in this browser only. Export a JSON backup periodically so you can restore them if browser data is cleared.</span></p>
 </div>
 <div class="statusbar" role="status"><div class="status-pill" id="statusPill"><span class="dot"></span><span id="statusText">Saved in this browser</span></div></div>
 
@@ -302,8 +273,8 @@ textarea{resize:vertical;min-height:140px;line-height:1.65}.capture textarea{min
 <!-- Simple, touch-friendly subject management. No typed commands required. -->
 <div class="overlay" id="subjectsOverlay">
   <div class="modal" role="dialog" aria-modal="true" aria-labelledby="subjectsTitle">
-    <h2 id="subjectsTitle">Make it yours. ✦</h2>
-    <p class="subject-intro">Subjects are little shelves for your prompts. Add as many as you like, rename an existing one, or remove one you no longer need.</p>
+    <h2 id="subjectsTitle">Manage subjects</h2>
+    <p class="subject-intro">Create, rename, or remove subjects to organize your prompts.</p>
     <label class="f" for="newSubjectName">New subject name</label>
     <div class="subject-add"><input type="text" id="newSubjectName" maxlength="120" placeholder="e.g. Gardening" autocomplete="off"><button type="button" class="btn btn-primary" id="addSubjectBtn">+ Add</button></div>
     <div class="subject-list" id="subjectList"></div>
@@ -693,29 +664,6 @@ $("mSaveEdit").addEventListener("click", function(){
 });
 $("promptOverlay").addEventListener("click", function(e){ if(e.target===this) this.classList.remove("open"); });
 
-
-/* ============ three cheerful, pointer-reactive friends ============ */
-(function initFriends(){
-  const stage=$("mascotStage"),bubble=$("mascotMood");
-  if(!stage)return;
-  let frame=0,mouseX=0,mouseY=0,resetTimer=0;
-  const isReduced=window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  function updateEyes(){
-    frame=0;if(isReduced)return;
-    const r=stage.getBoundingClientRect();
-    const dx=Math.max(-1,Math.min(1,(mouseX-(r.left+r.width/2))/(r.width*.7)));
-    const dy=Math.max(-1,Math.min(1,(mouseY-(r.top+r.height/2))/(r.height*.7)));
-    stage.style.setProperty("--eye-x",(dx*4.5).toFixed(2)+"px");
-    stage.style.setProperty("--eye-y",(dy*3.6).toFixed(2)+"px");
-    stage.style.setProperty("--shift-x",(dx*5).toFixed(2)+"px");
-    stage.style.setProperty("--shift-y",(dy*3).toFixed(2)+"px");
-  }
-  window.addEventListener("pointermove",e=>{if(e.pointerType==="touch")return;mouseX=e.clientX;mouseY=e.clientY;if(!frame)frame=requestAnimationFrame(updateEyes);},{passive:true});
-  function say(message){bubble.textContent=message;stage.classList.add("is-happy");clearTimeout(resetTimer);resetTimer=setTimeout(()=>{stage.classList.remove("is-happy");bubble.textContent="Psst… say hi! ✦";},2200);}
-  stage.addEventListener("pointerenter",()=>say("Oh, hello there! ♡"));
-  stage.addEventListener("click",()=>{const msgs=["You've got this! ✦","Milo says hi! ♡","Pip is cheering you on!","Momo likes your ideas!","A little idea, a big spark!"];say(msgs[Math.floor(Math.random()*msgs.length)]);});
-  stage.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();stage.click();}});
-})();
 
 /* ============ init ============ */
 loadLocal();
