@@ -173,15 +173,18 @@ svg{display:block}
 .banner p{font-size:15px;line-height:1.5}
 .banner-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
 
-.layout{display:grid;grid-template-columns:minmax(0,1fr) 410px;grid-template-areas:"top side" "banner side" "hero side" "lib side";grid-template-rows:auto auto auto 1fr;column-gap:64px;align-items:start}
+.layout{display:grid;grid-template-columns:minmax(0,1fr) 410px;grid-template-areas:"top side" "banner side" "hero side" "lib side" "foot side";grid-template-rows:auto auto auto 1fr auto;column-gap:64px;align-items:start}
 .topbar{grid-area:top}
 .banner{grid-area:banner}
+.footer{grid-area:foot}
 .hero{grid-area:hero;padding:34px 0 52px}
 .side{grid-area:side;align-self:start}
 .library{grid-area:lib;min-width:0}
 /* Desktop: the composer is a pinned pane that always fits the window, so Tuck never scrolls away. */
 @media (min-width:1080px) and (min-height:620px){
-  .side{position:sticky;top:16px;height:min(calc(100vh - 32px),880px);height:min(calc(100dvh - 32px),880px)}
+  .page{padding-bottom:16px}
+  .footer{padding-bottom:8px}
+  .side{position:sticky;top:22px;height:min(calc(100vh - 44px),880px);height:min(calc(100dvh - 44px),880px)}
   .composer-wrap{height:100%;display:flex;flex-direction:column}
   .composer{flex:1;min-height:0;display:flex;flex-direction:column;overflow-y:auto;overscroll-behavior:contain}
   .composer .field-grow{flex:1 1 auto;display:flex;flex-direction:column;min-height:124px}
@@ -192,19 +195,20 @@ svg{display:block}
 }
 @media (min-width:1080px) and (max-height:800px){
   :root{--tk:.96}
-  .composer-head p{display:none}
-  .composer{padding-top:20px}
-  .composer-head{margin-bottom:12px}
+  .side .composer-head p{display:none}
+  .side .composer{padding-top:20px}
+  .side .composer-head{margin-bottom:12px}
 }
 @media (min-width:1080px) and (max-height:700px){
   .composer .field-grow{min-height:100px}
   .composer .field-grow .textarea{min-height:72px}
   .composer .two-md{margin-top:12px!important}
   .composer .field + .field{margin-top:12px}
-  .composer-foot{margin-top:14px;padding-top:12px}
-  .composer-actions{margin-top:10px}
-  .composer{padding-top:18px;padding-bottom:16px}
-  .composer-head h2{font-size:23px}
+  .side .composer-foot{margin-top:14px;padding-top:12px}
+  .side .composer-actions{margin-top:10px}
+  .side .composer{padding-top:14px;padding-bottom:14px}
+  .side .composer-head{margin-bottom:8px}
+  .side .composer-head h2{font-size:23px}
 }
 .kbd-hint{display:none}
 @media (min-width:1080px) and (min-height:900px) and (hover:hover){.kbd-hint{display:block}}
@@ -456,7 +460,7 @@ dialog.dlg.fallback{position:fixed;inset:0;margin:auto;z-index:90;height:fit-con
 /* ---------- Responsive ---------- */
 @media (max-width:1180px){.layout{column-gap:44px;grid-template-columns:minmax(0,1fr) 380px}.page{padding-inline:32px}}
 @media (max-width:1079px){
-  .layout{grid-template-columns:minmax(0,1fr);grid-template-areas:"top" "banner" "hero" "side" "lib"}
+  .layout{grid-template-columns:minmax(0,1fr);grid-template-areas:"top" "banner" "hero" "side" "lib" "foot"}
   .hero{padding:4px 0 8px}
   .hero h1{max-width:14ch}
   .side{margin:28px 0 56px}
@@ -653,12 +657,13 @@ dialog.dlg.fallback{position:fixed;inset:0;margin:auto;z-index:90;height:fit-con
         <p class="private-empty" id="privateEmpty" hidden></p>
       </section>
     </main>
+
+    <footer class="footer">
+      <span class="footer-status"><span class="status-dot" id="statusDot"></span><span id="statusText">Saved in this browser</span></span>
+      <span><button type="button" class="btn btn-quiet btn-sm" id="footBackup">Backup and restore</button></span>
+    </footer>
   </div>
 
-  <footer class="footer">
-    <span class="footer-status"><span class="status-dot" id="statusDot"></span><span id="statusText">Saved in this browser</span></span>
-    <span><button type="button" class="btn btn-quiet btn-sm" id="footBackup">Backup and restore</button></span>
-  </footer>
 </div>
 
 <!-- View / edit a prompt -->
